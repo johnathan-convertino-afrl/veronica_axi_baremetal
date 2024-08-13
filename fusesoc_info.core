@@ -32,8 +32,8 @@ filesets:
 
   dep:
     depend:
-      - AFRL:rom:apb_rom:1.0.0
       - AFRL:utility:helper:1.0.0
+      - AFRL:utility:tcl_helper_check:1.0.0
       - spinalhdl:cpu:veronica_axi:1.0.0
 
   #dep_tb:
