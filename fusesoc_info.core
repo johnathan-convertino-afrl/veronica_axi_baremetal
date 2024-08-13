@@ -8,16 +8,19 @@ filesets:
     files:
       - common/xilinx/system_gen.tcl : {file_type : tclSource}
 
-  tb:
-    files:
-      - tb/tb_veronica.v : { file_type: verilogSource }
+  #tb:
+    #files:
+      #- tb/tb_veronica.v : { file_type: verilogSource }
 
   nexys-a7-100t:
     files:
-      - nexys-a7-100t/system_constr.xdc : {file_type : xdc}
-      - nexys-a7-100t/system_wrapper.v : {file_type : verilogSource}
+      - nexys-a7-100t/system_constr.xdc    : {file_type : xdc}
+      - nexys-a7-100t/system_gen_ps.tcl    : {file_type : tclSource}
+      - nexys-a7-100t/system_ps_wrapper.v  : {file_type : verilogSource}
+      - nexys-a7-100t/system_wrapper.v     : {file_type : verilogSource}
     depend:
-      - AFRL:utility:digilent_nexys-a7-100t_board_base:1.0.0
+      - AFRL:utility:digilent_nexys-a7-100t_board_base_constr:1.0.0
+      - AFRL:utility:digilent_nexys-a7-100t_board_base_ddr_cfg:1.0.0
       - AFRL:utility:vivado_board_support_packages
 
   crosslink-nx_eval:
@@ -33,12 +36,12 @@ filesets:
       - AFRL:utility:helper:1.0.0
       - spinalhdl:cpu:veronica_axi:1.0.0
 
-  dep_tb:
-    depend:
-      - spinalhdl:cpu:ace_vexriscv_murax_sim:1.0.0
-      - AFRL:simulation:clock_stimulator
-      - AFRL:vpi:tcp_server:1.0.0
-      - ::jtag_vpi:0-r5
+  #dep_tb:
+    #depend:
+      #- spinalhdl:cpu:ace_vexriscv_murax_sim:1.0.0
+      #- AFRL:simulation:clock_stimulator
+      #- AFRL:vpi:tcp_server:1.0.0
+      #- ::jtag_vpi:0-r5
 
 targets:
 
@@ -66,10 +69,10 @@ targets:
       radiant:
         part: LIFCL-40-9BG400C
 
-  sim: &sim
-    description: Simulate with JTAG TCP server, UART TCP server, and GPIO TCP server
-    default_tool: icarus
-    toplevel: tb_ace_murax
-    filesets: [tb, dep_tb]
-    parameters:
-      - jtag_vpi_enable=true
+  #sim: &sim
+    #description: Simulate with JTAG TCP server, UART TCP server, and GPIO TCP server
+    #default_tool: icarus
+    #toplevel: tb_ace_murax
+    #filesets: [tb, dep_tb]
+    #parameters:
+      #- jtag_vpi_enable=true
