@@ -115,6 +115,7 @@ module system
     .M_AXI_wready(1'b0),
     .M_AXI_wstrb(),
     .M_AXI_wvalid(),
+    .s_axi_dma_arstn(1'b1),
     .s_axi_dma_aclk(1'b0),
     .s_axi_dma_araddr(32'h00000000),
     .s_axi_dma_arcache(4'b0000),

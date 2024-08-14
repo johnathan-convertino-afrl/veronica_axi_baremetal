@@ -71,7 +71,7 @@ module system_ps_wrapper
           input     [31:0]    gpio1_io_i,
           output    [31:0]    gpio1_io_o,
           output    [31:0]    gpio1_io_t,
-          input               io_s_axi_dma_arstn,
+          input               s_axi_dma_arstn,
           output              s_axi_clk,
           input               s_axi_dma_aclk,
           input     [31:0]    s_axi_dma_araddr,
@@ -122,11 +122,15 @@ module system_ps_wrapper
      wire           cpu_clk;
      wire           ddr_clk;
      wire           vga_clk;
-     wire           eth_clk;
+
+     //jtag
+     wire           jtag_tck;
+     wire           jtag_tdi;
+     wire           jtag_tdo;
+     wire           jtag_tms;
 
      //resets
      wire [ 0:0]    ddr_rstgen_peripheral_aresetn;
-     wire [ 0:0]    sys_rstgen_interconnect_aresetn;
      wire [ 0:0]    sys_rstgen_peripheral_aresetn;
      wire [ 0:0]    sys_rstgen_peripheral_reset;
 
@@ -136,48 +140,40 @@ module system_ps_wrapper
      wire           axi_ddr_ctrl_ui_clk_sync_rst;
 
      //axi4 w/ID memory bus (ibus/dbus path)
-     wire [31:0]    inst_ruffle_m_axi_mbus_ARADDR;
-     wire [ 1:0]    inst_ruffle_m_axi_mbus_ARBURST;
-     wire [ 3:0]    inst_ruffle_m_axi_mbus_ARCACHE;
-     wire [ 3:0]    inst_ruffle_m_axi_mbus_ARID;
-     wire [ 7:0]    inst_ruffle_m_axi_mbus_ARLEN;
-     wire [ 2:0]    inst_ruffle_m_axi_mbus_ARPROT;
-     wire           inst_ruffle_m_axi_mbus_ARREADY;
-     wire [ 2:0]    inst_ruffle_m_axi_mbus_ARSIZE;
-     wire           inst_ruffle_m_axi_mbus_ARVALID;
-     wire [31:0]    inst_ruffle_m_axi_mbus_AWADDR;
-     wire [ 1:0]    inst_ruffle_m_axi_mbus_AWBURST;
-     wire [ 3:0]    inst_ruffle_m_axi_mbus_AWCACHE;
-     wire [ 3:0]    inst_ruffle_m_axi_mbus_AWID;
-     wire [ 7:0]    inst_ruffle_m_axi_mbus_AWLEN;
-     wire [ 2:0]    inst_ruffle_m_axi_mbus_AWPROT;
-     wire           inst_ruffle_m_axi_mbus_AWREADY;
-     wire [ 2:0]    inst_ruffle_m_axi_mbus_AWSIZE;
-     wire           inst_ruffle_m_axi_mbus_AWVALID;
-     wire [ 3:0]    inst_ruffle_m_axi_mbus_BID;
-     wire           inst_ruffle_m_axi_mbus_BREADY;
-     wire           inst_ruffle_m_axi_mbus_BVALID;
-     wire [31:0]    inst_ruffle_m_axi_mbus_RDATA;
-     wire [ 3:0]    inst_ruffle_m_axi_mbus_RID;
-     wire           inst_ruffle_m_axi_mbus_RLAST;
-     wire           inst_ruffle_m_axi_mbus_RREADY;
-     wire           inst_ruffle_m_axi_mbus_RVALID;
-     wire [31:0]    inst_ruffle_m_axi_mbus_WDATA;
-     wire           inst_ruffle_m_axi_mbus_WLAST;
-     wire           inst_ruffle_m_axi_mbus_WREADY;
-     wire [ 3:0]    inst_ruffle_m_axi_mbus_WSTRB;
-     wire           inst_ruffle_m_axi_mbus_WVALID;
+     wire [31:0]    m_axi_mbus_ARADDR;
+     wire [ 1:0]    m_axi_mbus_ARBURST;
+     wire [ 3:0]    m_axi_mbus_ARCACHE;
+     wire [ 3:0]    m_axi_mbus_ARID;
+     wire [ 7:0]    m_axi_mbus_ARLEN;
+     wire [ 2:0]    m_axi_mbus_ARPROT;
+     wire           m_axi_mbus_ARREADY;
+     wire [ 2:0]    m_axi_mbus_ARSIZE;
+     wire           m_axi_mbus_ARVALID;
+     wire [31:0]    m_axi_mbus_AWADDR;
+     wire [ 1:0]    m_axi_mbus_AWBURST;
+     wire [ 3:0]    m_axi_mbus_AWCACHE;
+     wire [ 3:0]    m_axi_mbus_AWID;
+     wire [ 7:0]    m_axi_mbus_AWLEN;
+     wire [ 2:0]    m_axi_mbus_AWPROT;
+     wire           m_axi_mbus_AWREADY;
+     wire [ 2:0]    m_axi_mbus_AWSIZE;
+     wire           m_axi_mbus_AWVALID;
+     wire [ 3:0]    m_axi_mbus_BID;
+     wire           m_axi_mbus_BREADY;
+     wire           m_axi_mbus_BVALID;
+     wire [31:0]    m_axi_mbus_RDATA;
+     wire [ 3:0]    m_axi_mbus_RID;
+     wire           m_axi_mbus_RLAST;
+     wire           m_axi_mbus_RREADY;
+     wire           m_axi_mbus_RVALID;
+     wire [31:0]    m_axi_mbus_WDATA;
+     wire           m_axi_mbus_WLAST;
+     wire           m_axi_mbus_WREADY;
+     wire [ 3:0]    m_axi_mbus_WSTRB;
+     wire           m_axi_mbus_WVALID;
 
      //distribute clock for axi and assign to output for m_axi_acc
      assign s_axi_clk = cpu_clk;
-
-     //MDIO ETH BUF
-     //IOBUF MDIO_mdio_iobuf
-          //(.I(MDIO_mdio_o),
-           //.IO(MDIO_mdio_io),
-           //.O(MDIO_mdio_i),
-           //.T(MDIO_mdio_t));
-
 
      axi_ddr_ctrl inst_axi_ddr_ctrl
      (
@@ -197,41 +193,41 @@ module system_ps_wrapper
           .ddr2_ras_n(DDR_ras_n),
           .ddr2_we_n(DDR_we_n),
           .mmcm_locked(axi_ddr_ctrl_mmcm_locked),
-          .s_axi_araddr(inst_ruffle_m_axi_mbus_ARADDR),
-          .s_axi_arburst(inst_ruffle_m_axi_mbus_ARBURST),
-          .s_axi_arcache(inst_ruffle_m_axi_mbus_ARCACHE),
-          .s_axi_arid(inst_ruffle_m_axi_mbus_ARID),
-          .s_axi_arlen(inst_ruffle_m_axi_mbus_ARLEN),
+          .s_axi_araddr(m_axi_mbus_ARADDR),
+          .s_axi_arburst(m_axi_mbus_ARBURST),
+          .s_axi_arcache(m_axi_mbus_ARCACHE),
+          .s_axi_arid(m_axi_mbus_ARID),
+          .s_axi_arlen(m_axi_mbus_ARLEN),
           .s_axi_arlock(1'b0),
-          .s_axi_arprot(inst_ruffle_m_axi_mbus_ARPROT),
+          .s_axi_arprot(m_axi_mbus_ARPROT),
           .s_axi_arqos({1'b0,1'b0,1'b0,1'b0}),
-          .s_axi_arready(inst_ruffle_m_axi_mbus_ARREADY),
-          .s_axi_arsize(inst_ruffle_m_axi_mbus_ARSIZE),
-          .s_axi_arvalid(inst_ruffle_m_axi_mbus_ARVALID),
-          .s_axi_awaddr(inst_ruffle_m_axi_mbus_AWADDR),
-          .s_axi_awburst(inst_ruffle_m_axi_mbus_AWBURST),
-          .s_axi_awcache(inst_ruffle_m_axi_mbus_AWCACHE),
-          .s_axi_awid(inst_ruffle_m_axi_mbus_AWID),
-          .s_axi_awlen(inst_ruffle_m_axi_mbus_AWLEN),
+          .s_axi_arready(m_axi_mbus_ARREADY),
+          .s_axi_arsize(m_axi_mbus_ARSIZE),
+          .s_axi_arvalid(m_axi_mbus_ARVALID),
+          .s_axi_awaddr(m_axi_mbus_AWADDR),
+          .s_axi_awburst(m_axi_mbus_AWBURST),
+          .s_axi_awcache(m_axi_mbus_AWCACHE),
+          .s_axi_awid(m_axi_mbus_AWID),
+          .s_axi_awlen(m_axi_mbus_AWLEN),
           .s_axi_awlock(1'b0),
-          .s_axi_awprot(inst_ruffle_m_axi_mbus_AWPROT),
+          .s_axi_awprot(m_axi_mbus_AWPROT),
           .s_axi_awqos({1'b0,1'b0,1'b0,1'b0}),
-          .s_axi_awready(inst_ruffle_m_axi_mbus_AWREADY),
-          .s_axi_awsize(inst_ruffle_m_axi_mbus_AWSIZE),
-          .s_axi_awvalid(inst_ruffle_m_axi_mbus_AWVALID),
-          .s_axi_bid(inst_ruffle_m_axi_mbus_BID),
-          .s_axi_bready(inst_ruffle_m_axi_mbus_BREADY),
-          .s_axi_bvalid(inst_ruffle_m_axi_mbus_BVALID),
-          .s_axi_rdata(inst_ruffle_m_axi_mbus_RDATA),
-          .s_axi_rid(inst_ruffle_m_axi_mbus_RID),
-          .s_axi_rlast(inst_ruffle_m_axi_mbus_RLAST),
-          .s_axi_rready(inst_ruffle_m_axi_mbus_RREADY),
-          .s_axi_rvalid(inst_ruffle_m_axi_mbus_RVALID),
-          .s_axi_wdata(inst_ruffle_m_axi_mbus_WDATA),
-          .s_axi_wlast(inst_ruffle_m_axi_mbus_WLAST),
-          .s_axi_wready(inst_ruffle_m_axi_mbus_WREADY),
-          .s_axi_wstrb(inst_ruffle_m_axi_mbus_WSTRB),
-          .s_axi_wvalid(inst_ruffle_m_axi_mbus_WVALID),
+          .s_axi_awready(m_axi_mbus_AWREADY),
+          .s_axi_awsize(m_axi_mbus_AWSIZE),
+          .s_axi_awvalid(m_axi_mbus_AWVALID),
+          .s_axi_bid(m_axi_mbus_BID),
+          .s_axi_bready(m_axi_mbus_BREADY),
+          .s_axi_bvalid(m_axi_mbus_BVALID),
+          .s_axi_rdata(m_axi_mbus_RDATA),
+          .s_axi_rid(m_axi_mbus_RID),
+          .s_axi_rlast(m_axi_mbus_RLAST),
+          .s_axi_rready(m_axi_mbus_RREADY),
+          .s_axi_rvalid(m_axi_mbus_RVALID),
+          .s_axi_wdata(m_axi_mbus_WDATA),
+          .s_axi_wlast(m_axi_mbus_WLAST),
+          .s_axi_wready(m_axi_mbus_WREADY),
+          .s_axi_wstrb(m_axi_mbus_WSTRB),
+          .s_axi_wvalid(m_axi_mbus_WVALID),
           .sys_clk_i(ddr_clk),
           .sys_rst(sys_rstn),
           .ui_clk(axi_ddr_ctrl_ui_clk),
@@ -243,8 +239,7 @@ module system_ps_wrapper
           .clk_in1(sys_clk),
           .clk_out1(cpu_clk),
           .clk_out2(ddr_clk),
-          .clk_out3(vga_clk),
-          .clk_out4(eth_clk)
+          .clk_out3(vga_clk)
      );
 
      ddr_rstgen inst_ddr_rstgen
@@ -257,6 +252,23 @@ module system_ps_wrapper
           .slowest_sync_clk(axi_ddr_ctrl_ui_clk)
      );
 
+     //BSCANE2 #(
+          //.DISABLE_JTAG("FALSE"),
+          //.JTAG_CHAIN(2)
+     //) inst_bSCANE2 (
+          //.CAPTURE (), //o
+          //.DRCK    (), //o
+          //.RESET   (), //o
+          //.RUNTEST (), //o
+          //.SEL     (), //o
+          //.SHIFT   (), //o
+          //.TCK     (jtag_tck), //o
+          //.TDI     (jtag_tdi), //o
+          //.TMS     (jtag_tms), //o
+          //.UPDATE  (), //o
+          //.TDO     (jtag_tdo)  //i
+     //);
+
      Veronica inst_veronica
      (
           .io_arst(sys_rstgen_peripheral_reset),
@@ -265,42 +277,42 @@ module system_ps_wrapper
           .io_ddr_clk(axi_ddr_ctrl_ui_clk),
           //.io_eth_clk(eth_clk),
           .io_s_axi_dma0_aclk(s_axi_dma_aclk),
-          .io_s_axi_dma0_arstn(io_s_axi_dma_arstn),
-          .io_jtag_tms(1'b0),
-          .io_jtag_tdi(1'b0),
-          .io_jtag_tdo(),
-          .io_jtag_tck(1'b0),
-          .m_axi_mbus_araddr(inst_ruffle_m_axi_mbus_ARADDR),
-          .m_axi_mbus_arburst(inst_ruffle_m_axi_mbus_ARBURST),
-          .m_axi_mbus_arcache(inst_ruffle_m_axi_mbus_ARCACHE),
-          .m_axi_mbus_arid(inst_ruffle_m_axi_mbus_ARID),
-          .m_axi_mbus_arlen(inst_ruffle_m_axi_mbus_ARLEN),
-          .m_axi_mbus_arprot(inst_ruffle_m_axi_mbus_ARPROT),
-          .m_axi_mbus_arready(inst_ruffle_m_axi_mbus_ARREADY),
-          .m_axi_mbus_arsize(inst_ruffle_m_axi_mbus_ARSIZE),
-          .m_axi_mbus_arvalid(inst_ruffle_m_axi_mbus_ARVALID),
-          .m_axi_mbus_awaddr(inst_ruffle_m_axi_mbus_AWADDR),
-          .m_axi_mbus_awburst(inst_ruffle_m_axi_mbus_AWBURST),
-          .m_axi_mbus_awcache(inst_ruffle_m_axi_mbus_AWCACHE),
-          .m_axi_mbus_awid(inst_ruffle_m_axi_mbus_AWID),
-          .m_axi_mbus_awlen(inst_ruffle_m_axi_mbus_AWLEN),
-          .m_axi_mbus_awprot(inst_ruffle_m_axi_mbus_AWPROT),
-          .m_axi_mbus_awready(inst_ruffle_m_axi_mbus_AWREADY),
-          .m_axi_mbus_awsize(inst_ruffle_m_axi_mbus_AWSIZE),
-          .m_axi_mbus_awvalid(inst_ruffle_m_axi_mbus_AWVALID),
-          .m_axi_mbus_bid(inst_ruffle_m_axi_mbus_BID),
-          .m_axi_mbus_bready(inst_ruffle_m_axi_mbus_BREADY),
-          .m_axi_mbus_bvalid(inst_ruffle_m_axi_mbus_BVALID),
-          .m_axi_mbus_rdata(inst_ruffle_m_axi_mbus_RDATA),
-          .m_axi_mbus_rid(inst_ruffle_m_axi_mbus_RID),
-          .m_axi_mbus_rlast(inst_ruffle_m_axi_mbus_RLAST),
-          .m_axi_mbus_rready(inst_ruffle_m_axi_mbus_RREADY),
-          .m_axi_mbus_rvalid(inst_ruffle_m_axi_mbus_RVALID),
-          .m_axi_mbus_wdata(inst_ruffle_m_axi_mbus_WDATA),
-          .m_axi_mbus_wlast(inst_ruffle_m_axi_mbus_WLAST),
-          .m_axi_mbus_wready(inst_ruffle_m_axi_mbus_WREADY),
-          .m_axi_mbus_wstrb(inst_ruffle_m_axi_mbus_WSTRB),
-          .m_axi_mbus_wvalid(inst_ruffle_m_axi_mbus_WVALID),
+          .io_s_axi_dma0_arstn(s_axi_dma_arstn),
+          //.io_jtag_tms(jtag_tms),
+          //.io_jtag_tdi(jtag_tdi),
+          //.io_jtag_tdo(jtag_tdo),
+          //.io_jtag_tck(jtag_tck),
+          .m_axi_mbus_araddr(m_axi_mbus_ARADDR),
+          .m_axi_mbus_arburst(m_axi_mbus_ARBURST),
+          .m_axi_mbus_arcache(m_axi_mbus_ARCACHE),
+          .m_axi_mbus_arid(m_axi_mbus_ARID),
+          .m_axi_mbus_arlen(m_axi_mbus_ARLEN),
+          .m_axi_mbus_arprot(m_axi_mbus_ARPROT),
+          .m_axi_mbus_arready(m_axi_mbus_ARREADY),
+          .m_axi_mbus_arsize(m_axi_mbus_ARSIZE),
+          .m_axi_mbus_arvalid(m_axi_mbus_ARVALID),
+          .m_axi_mbus_awaddr(m_axi_mbus_AWADDR),
+          .m_axi_mbus_awburst(m_axi_mbus_AWBURST),
+          .m_axi_mbus_awcache(m_axi_mbus_AWCACHE),
+          .m_axi_mbus_awid(m_axi_mbus_AWID),
+          .m_axi_mbus_awlen(m_axi_mbus_AWLEN),
+          .m_axi_mbus_awprot(m_axi_mbus_AWPROT),
+          .m_axi_mbus_awready(m_axi_mbus_AWREADY),
+          .m_axi_mbus_awsize(m_axi_mbus_AWSIZE),
+          .m_axi_mbus_awvalid(m_axi_mbus_AWVALID),
+          .m_axi_mbus_bid(m_axi_mbus_BID),
+          .m_axi_mbus_bready(m_axi_mbus_BREADY),
+          .m_axi_mbus_bvalid(m_axi_mbus_BVALID),
+          .m_axi_mbus_rdata(m_axi_mbus_RDATA),
+          .m_axi_mbus_rid(m_axi_mbus_RID),
+          .m_axi_mbus_rlast(m_axi_mbus_RLAST),
+          .m_axi_mbus_rready(m_axi_mbus_RREADY),
+          .m_axi_mbus_rvalid(m_axi_mbus_RVALID),
+          .m_axi_mbus_wdata(m_axi_mbus_WDATA),
+          .m_axi_mbus_wlast(m_axi_mbus_WLAST),
+          .m_axi_mbus_wready(m_axi_mbus_WREADY),
+          .m_axi_mbus_wstrb(m_axi_mbus_WSTRB),
+          .m_axi_mbus_wvalid(m_axi_mbus_WVALID),
           .m_axi_acc_araddr(M_AXI_araddr),
           .m_axi_acc_arprot(M_AXI_arprot),
           .m_axi_acc_arready(M_AXI_arready),
@@ -353,17 +365,6 @@ module system_ps_wrapper
           .io_gpioB_writeEnable(gpio1_io_t),
           .io_uart_txd(UART_txd),
           .io_uart_rxd(UART_rxd),
-          //.io_phy_rx_valid(1'b0),
-          //.io_phy_rx_ready(),
-          //.io_phy_rx_payload_last(1'b0),
-          //.io_phy_rx_payload_fragment_error(1'b0),
-          //.io_phy_rx_payload_fragment_data(0),
-          //.io_phy_tx_valid(),
-          //.io_phy_tx_ready(1'b0),
-          //.io_phy_tx_payload_last(),
-          //.io_phy_tx_payload_fragment_data(),
-          //.io_phy_colision(1'b0),
-          //.io_phy_busy(1'b0),
           .io_spi_ss(spi_ss),
           .io_spi_sclk(spi_sclk),
           .io_spi_mosi(spi_mosi),
@@ -386,9 +387,8 @@ module system_ps_wrapper
           .aux_reset_in(axi_ddr_ctrl_ui_clk_sync_rst),
           .dcm_locked(axi_ddr_ctrl_mmcm_locked),
           .ext_reset_in(sys_rstn),
-          .interconnect_aresetn(sys_rstgen_interconnect_aresetn),
           .mb_debug_sys_rst(1'b0),
-          .peripheral_reset(sys_rstgen_peripheral_areset),
+          .peripheral_reset(sys_rstgen_peripheral_reset),
           .peripheral_aresetn(sys_rstgen_peripheral_aresetn),
           .slowest_sync_clk(cpu_clk)
      );

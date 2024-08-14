@@ -6,7 +6,6 @@ ip_vlvn_version_check "xilinx.com:ip:clk_wiz:6.0"
 # create a pll clock IP with a 100 MHz clock
 create_ip -vlnv xilinx.com:ip:clk_wiz:6.0 -module_name clk_wiz_1
 set_property CONFIG.PRIMITIVE MMCM [get_ips clk_wiz_1]
-# set_property CONFIG.NUM_OUT_CLKS {4} [get_ips clk_wiz_1]
 set_property CONFIG.CLKOUT1_REQUESTED_OUT_FREQ 100 [get_ips clk_wiz_1]
 set_property CONFIG.USE_LOCKED false [get_ips clk_wiz_1]
 set_property CONFIG.PRIM_IN_FREQ 100.000 [get_ips clk_wiz_1]
@@ -15,8 +14,6 @@ set_property CONFIG.CLKOUT2_USED {true} [get_ips clk_wiz_1]
 set_property CONFIG.CLKOUT2_REQUESTED_OUT_FREQ {200.000} [get_ips clk_wiz_1]
 set_property CONFIG.CLKOUT3_USED {true} [get_ips clk_wiz_1]
 set_property CONFIG.CLKOUT3_REQUESTED_OUT_FREQ {25.000} [get_ips clk_wiz_1]
-set_property CONFIG.CLKOUT4_USED {true} [get_ips clk_wiz_1]
-set_property CONFIG.CLKOUT4_REQUESTED_OUT_FREQ {50.000} [get_ips clk_wiz_1]
 
 set_property generate_synth_checkpoint false [get_files clk_wiz_1.xci]
 
