@@ -16,17 +16,6 @@ set_false_path -through [get_ports ftdi_tx]
 set_false_path -through [get_ports ftdi_rx]
 set_false_path -through [get_ports resetn]
 
-##Pmod Headers
-##Pmod Header pmod_ja
-set_property -dict { PACKAGE_PIN C17   IOSTANDARD LVCMOS33 } [get_ports { pmod_ja_ncs  }]
-set_property -dict { PACKAGE_PIN D18   IOSTANDARD LVCMOS33 } [get_ports { pmod_ja_mosi }]
-set_property -dict { PACKAGE_PIN E18   IOSTANDARD LVCMOS33 } [get_ports { pmod_ja_miso }]
-set_property -dict { PACKAGE_PIN G17   IOSTANDARD LVCMOS33 } [get_ports { pmod_ja_sck  }]
-set_property -dict { PACKAGE_PIN D17   IOSTANDARD LVCMOS33 } [get_ports { pmod_ja_nc   }]
-set_property -dict { PACKAGE_PIN E17   IOSTANDARD LVCMOS33 } [get_ports { pmod_ja_rst  }]
-set_property -dict { PACKAGE_PIN F18   IOSTANDARD LVCMOS33 } [get_ports { pmod_ja_w    }]
-set_property -dict { PACKAGE_PIN G18   IOSTANDARD LVCMOS33 } [get_ports { pmod_ja_hld  }]
-
 
 set_property BITSTREAM.CONFIG.SPI_BUSWIDTH 4 [current_design]
 
