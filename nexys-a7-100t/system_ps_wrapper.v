@@ -88,31 +88,35 @@ module system_ps_wrapper
           input               io_s_axi_dma_arstn,
           output              s_axi_clk,
           input               s_axi_dma_aclk,
-          input     [31:0]    s_axi_dma_araddr,
-          input     [ 3:0]    s_axi_dma_arcache,
-          input     [ 7:0]    s_axi_dma_arlen,
-          input     [ 2:0]    s_axi_dma_arprot,
-          output              s_axi_dma_arready,
-          input     [ 2:0]    s_axi_dma_arsize,
-          input               s_axi_dma_arvalid,
-          input     [31:0]    s_axi_dma_awaddr,
-          input     [ 3:0]    s_axi_dma_awcache,
-          input     [ 7:0]    s_axi_dma_awlen,
-          input     [ 2:0]    s_axi_dma_awprot,
-          output              s_axi_dma_awready,
-          input     [ 2:0]    s_axi_dma_awsize,
           input               s_axi_dma_awvalid,
-          input               s_axi_dma_bready,
-          output              s_axi_dma_bvalid,
-          output    [31:0]    s_axi_dma_rdata,
-          output              s_axi_dma_rlast,
-          input               s_axi_dma_rready,
-          output              s_axi_dma_rvalid,
-          input     [31:0]    s_axi_dma_wdata,
-          input               s_axi_dma_wlast,
-          output              s_axi_dma_wready,
-          input     [ 3:0]    s_axi_dma_wstrb,
+          output              s_axi_dma_awready,
+          input     [31:0]    s_axi_dma_awaddr,
+          input     [ 7:0]    s_axi_dma_awlen,
+          input     [ 2:0]    s_axi_dma_awsize,
+          input     [ 1:0]    s_axi_dma_awburst,
+          input     [ 3:0]    s_axi_dma_awcache,
+          input     [ 2:0]    s_axi_dma_awprot,
           input               s_axi_dma_wvalid,
+          output              s_axi_dma_wready,
+          input     [31:0]    s_axi_dma_wdata,
+          input     [ 3:0]    s_axi_dma_wstrb,
+          input               s_axi_dma_wlast,
+          output              s_axi_dma_bvalid,
+          input               s_axi_dma_bready,
+          output    [ 1:0]    s_axi_dma_bresp,
+          input               s_axi_dma_arvalid,
+          output              s_axi_dma_arready,
+          input     [31:0]    s_axi_dma_araddr,
+          input     [ 7:0]    s_axi_dma_arlen,
+          input     [ 2:0]    s_axi_dma_arsize,
+          input     [ 1:0]    s_axi_dma_arburst,
+          input     [ 3:0]    s_axi_dma_arcache,
+          input     [ 2:0]    s_axi_dma_arprot,
+          output              s_axi_dma_rvalid,
+          input               s_axi_dma_rready,
+          output    [31:0]    s_axi_dma_rdata,
+          output    [ 1:0]    s_axi_dma_rresp,
+          output              s_axi_dma_rlast,
           input               spi_io0_i,
           output              spi_io0_o,
           output              spi_io0_t,
@@ -126,7 +130,12 @@ module system_ps_wrapper
           output    [ 0:0]    spi_ss_o,
           output              spi_ss_t,
           input               sys_clk,
-          input               sys_rstn
+          input               sys_rstn,
+          output              vga_hsync,
+          output              vga_vsync,
+          output    [ 5:0]    vga_r,
+          output    [ 5:0]    vga_g,
+          output    [ 5:0]    vga_b
      );
 
      //ethernet buf signals
@@ -153,6 +162,7 @@ module system_ps_wrapper
      //clocks
      wire           axi_cpu_clk;
      wire           ddr_clk;
+     wire           tft_clk;
 
      //resets
      wire [ 0:0]    ddr_rstgen_peripheral_aresetn;
@@ -168,6 +178,8 @@ module system_ps_wrapper
      wire           axi_uartlite_irq;
      wire           axi_ethernet_irq;
      wire           axi_quad_spi_irq;
+     wire           axi_tft_irq;
+     wire           axi_timer_irq;
 
      //axi lite ethernet
      wire [31:0]    m_axi_eth_ARADDR;
@@ -336,6 +348,56 @@ module system_ps_wrapper
      wire           m_axi_timer_WREADY;
      wire [ 3:0]    m_axi_timer_WSTRB;
      wire           m_axi_timer_WVALID;
+
+     //axi lite tft vga controller
+     wire [31:0]    m_axi_vga_ARADDR;
+     wire           m_axi_vga_ARREADY;
+     wire           m_axi_vga_ARVALID;
+     wire [31:0]    m_axi_vga_AWADDR;
+     wire           m_axi_vga_AWREADY;
+     wire           m_axi_vga_AWVALID;
+     wire           m_axi_vga_BREADY;
+     wire [ 1:0]    m_axi_vga_BRESP;
+     wire           m_axi_vga_BVALID;
+     wire [31:0]    m_axi_vga_RDATA;
+     wire           m_axi_vga_RREADY;
+     wire [ 1:0]    m_axi_vga_RRESP;
+     wire           m_axi_vga_RVALID;
+     wire [31:0]    m_axi_vga_WDATA;
+     wire           m_axi_vga_WREADY;
+     wire [ 3:0]    m_axi_vga_WSTRB;
+     wire           m_axi_vga_WVALID;
+
+     //dma1 tft vga
+     wire      [31:0]    s_axi_dma_vga_araddr;
+     wire      [ 3:0]    s_axi_dma_vga_arcache;
+     wire      [ 7:0]    s_axi_dma_vga_arlen;
+     wire      [ 2:0]    s_axi_dma_vga_arprot;
+     wire                s_axi_dma_vga_arready;
+     wire      [ 2:0]    s_axi_dma_vga_arsize;
+     wire                s_axi_dma_vga_arvalid;
+     wire      [ 1:0]    s_axi_dma_vga_arburst;
+     wire      [31:0]    s_axi_dma_vga_awaddr;
+     wire      [ 3:0]    s_axi_dma_vga_awcache;
+     wire      [ 7:0]    s_axi_dma_vga_awlen;
+     wire      [ 2:0]    s_axi_dma_vga_awprot;
+     wire                s_axi_dma_vga_awready;
+     wire      [ 2:0]    s_axi_dma_vga_awsize;
+     wire                s_axi_dma_vga_awvalid;
+     wire      [ 1:0]    s_axi_dma_vga_awburst;
+     wire                s_axi_dma_vga_bready;
+     wire                s_axi_dma_vga_bvalid;
+     wire      [ 1:0]    s_axi_dma_vga_bresp;
+     wire      [31:0]    s_axi_dma_vga_rdata;
+     wire                s_axi_dma_vga_rlast;
+     wire                s_axi_dma_vga_rready;
+     wire                s_axi_dma_vga_rvalid;
+     wire      [ 1:0]    s_axi_dma_vga_rresp;
+     wire      [31:0]    s_axi_dma_vga_wdata;
+     wire                s_axi_dma_vga_wlast;
+     wire                s_axi_dma_vga_wready;
+     wire      [ 3:0]    s_axi_dma_vga_wstrb;
+     wire                s_axi_dma_vga_wvalid;
 
      //distribute clock for axi and assign to output for m_axi_acc
      assign s_axi_clk = axi_cpu_clk;
@@ -614,13 +676,14 @@ module system_ps_wrapper
           .tx(UART_txd)
      );
 
-     axi_double_timer inst_axi_double_timer (
+     axi_double_timer inst_axi_double_timer
+     (
           .capturetrig0(1'b0),    // input wire capturetrig0
           .capturetrig1(1'b0),    // input wire capturetrig1
           .generateout0(),    // output wire generateout0
           .generateout1(),    // output wire generateout1
           .pwm0(pwm0),                    // output wire pwm0
-          .interrupt(timer_irq),          // output wire interrupt
+          .interrupt(axi_timer_irq),          // output wire interrupt
           .freeze(1'b0),                // input wire freeze
           .s_axi_aclk(axi_cpu_clk),
           .s_axi_araddr(m_axi_timer_ARADDR[4:0]),
@@ -643,11 +706,77 @@ module system_ps_wrapper
           .s_axi_wvalid(m_axi_timer_WVALID)
      );
 
+     axi_tft_vga inst_axi_tft_vga
+     (
+          .s_axi_aclk(axi_cpu_clk),
+          .s_axi_aresetn(sys_rstgen_peripheral_aresetn),
+          .m_axi_aclk(axi_cpu_clk),
+          .m_axi_aresetn(sys_rstgen_peripheral_aresetn),
+          .md_error(),
+          .ip2intc_irpt(axi_tft_irq),
+          .m_axi_arready(s_axi_dma_vga_arready),  // input wire m_axi_arready
+          .m_axi_arvalid(s_axi_dma_vga_arvalid),  // output wire m_axi_arvalid
+          .m_axi_araddr(s_axi_dma_vga_araddr),    // output wire [31 : 0] m_axi_araddr
+          .m_axi_arlen(s_axi_dma_vga_arlen),      // output wire [7 : 0] m_axi_arlen
+          .m_axi_arsize(s_axi_dma_vga_arsize),    // output wire [2 : 0] m_axi_arsize
+          .m_axi_arburst(s_axi_dma_vga_arburst),  // output wire [1 : 0] m_axi_arburst
+          .m_axi_arprot(s_axi_dma_vga_arprot),    // output wire [2 : 0] m_axi_arprot
+          .m_axi_arcache(s_axi_dma_vga_arcache),  // output wire [3 : 0] m_axi_arcache
+          .m_axi_rready(s_axi_dma_vga_rready),    // output wire m_axi_rready
+          .m_axi_rvalid(s_axi_dma_vga_rvalid),    // input wire m_axi_rvalid
+          .m_axi_rdata(s_axi_dma_vga_rdata),      // input wire [31 : 0] m_axi_rdata
+          .m_axi_rresp(s_axi_dma_vga_rresp),      // input wire [1 : 0] m_axi_rresp
+          .m_axi_rlast(s_axi_dma_vga_rlast),      // input wire m_axi_rlast
+          .m_axi_awready(s_axi_dma_vga_awready),  // input wire m_axi_awready
+          .m_axi_awvalid(s_axi_dma_vga_awvalid),  // output wire m_axi_awvalid
+          .m_axi_awaddr(s_axi_dma_vga_awaddr),    // output wire [31 : 0] m_axi_awaddr
+          .m_axi_awlen(s_axi_dma_vga_awlen),      // output wire [7 : 0] m_axi_awlen
+          .m_axi_awsize(s_axi_dma_vga_awsize),    // output wire [2 : 0] m_axi_awsize
+          .m_axi_awburst(s_axi_dma_vga_awburst),  // output wire [1 : 0] m_axi_awburst
+          .m_axi_awprot(s_axi_dma_vga_awprot),    // output wire [2 : 0] m_axi_awprot
+          .m_axi_awcache(s_axi_dma_vga_awcache),  // output wire [3 : 0] m_axi_awcache
+          .m_axi_wready(s_axi_dma_vga_wready),    // input wire m_axi_wready
+          .m_axi_wvalid(s_axi_dma_vga_wvalid),    // output wire m_axi_wvalid
+          .m_axi_wdata(s_axi_dma_vga_wdata),      // output wire [31 : 0] m_axi_wdata
+          .m_axi_wstrb(s_axi_dma_vga_wstrb),      // output wire [3 : 0] m_axi_wstrb
+          .m_axi_wlast(s_axi_dma_vga_wlast),      // output wire m_axi_wlast
+          .m_axi_bready(s_axi_dma_vga_bready),    // output wire m_axi_bready
+          .m_axi_bvalid(s_axi_dma_vga_bvalid),    // input wire m_axi_bvalid
+          .m_axi_bresp(s_axi_dma_vga_bresp),      // input wire [1 : 0] m_axi_bresp
+          .s_axi_awaddr(m_axi_vga_AWADDR),
+          .s_axi_awvalid(m_axi_vga_AWVALID),
+          .s_axi_awready(m_axi_vga_AWREADY),
+          .s_axi_wdata(m_axi_vga_WDATA),
+          .s_axi_wstrb(m_axi_vga_WSTRB),
+          .s_axi_wvalid(m_axi_vga_WVALID),
+          .s_axi_wready(m_axi_vga_WREADY),
+          .s_axi_bresp(m_axi_vga_BRESP),
+          .s_axi_bvalid(m_axi_vga_BVALID),
+          .s_axi_bready(m_axi_vga_BREADY),
+          .s_axi_araddr(m_axi_vga_ARADDR),
+          .s_axi_arvalid(m_axi_vga_ARVALID),
+          .s_axi_arready(m_axi_vga_ARREADY),
+          .s_axi_rdata(m_axi_vga_RDATA),
+          .s_axi_rresp(m_axi_vga_RRESP),
+          .s_axi_rvalid(m_axi_vga_RVALID),
+          .s_axi_rready(m_axi_vga_RREADY),
+          .sys_tft_clk(tft_clk),
+          .tft_hsync(vga_hsync),
+          .tft_vsync(vga_vsync),
+          .tft_de(),
+          .tft_dps(),
+          .tft_vga_clk(),
+          .tft_vga_r(vga_r),
+          .tft_vga_g(vga_g),
+          .tft_vga_b(vga_b)
+     );
+
      clk_wiz_1 inst_clk_wiz_1
      (
           .clk_in1(sys_clk),
           .clk_out1(axi_cpu_clk),
-          .clk_out2(ddr_clk)
+          .clk_out2(ddr_clk),
+          .clk_out3(tft_clk)
      );
 
      ddr_rstgen inst_ddr_rstgen
@@ -664,9 +793,9 @@ module system_ps_wrapper
           .C_AXI_DATA_WIDTH(32),
           .C_AXI_ADDR_WIDTH(32),
           .NM(1),
-          .NS(6),      //double timer, ethernet, spi, qspi, uart, gpio
-          .SLAVE_ADDR({{32'h44A40000},{32'h44A30000},{32'h44A20000},{32'h44A10000},{32'h40600000},{32'h40000000}}),
-          .SLAVE_MASK({{32'hFFFF0000},{32'hFFFF0000},{32'hFFFF0000},{32'hFFFF0000},{32'hFFFF0000},{32'hFFFF0000}})
+          .NS(7),      //tft vga, double timer, ethernet, spi, qspi, uart, gpio
+          .SLAVE_ADDR({{32'h44A50000},{32'h44A40000},{32'h44A30000},{32'h44A20000},{32'h44A10000},{32'h40600000},{32'h40000000}}),
+          .SLAVE_MASK({{32'hFFFF0000},{32'hFFFF0000},{32'hFFFF0000},{32'hFFFF0000},{32'hFFFF0000},{32'hFFFF0000},{32'hFFFF0000}})
      ) inst_axilxbar (
           .S_AXI_ACLK(axi_cpu_clk),
           .S_AXI_ARESETN(sys_rstgen_peripheral_aresetn),
@@ -689,25 +818,25 @@ module system_ps_wrapper
           .S_AXI_RRESP(m_axi_perf_RRESP),
           .S_AXI_RVALID(m_axi_perf_RVALID),
           .S_AXI_RREADY(m_axi_perf_RREADY),
-          .M_AXI_AWADDR  ({m_axi_timer_AWADDR,    m_axi_eth_AWADDR,    m_axi_spi_AWADDR,    m_axi_qspi_AWADDR,    m_axi_uart_AWADDR,     m_axi_gpio_AWADDR}),
+          .M_AXI_AWADDR  ({m_axi_vga_AWADDR,      m_axi_timer_AWADDR,    m_axi_eth_AWADDR,    m_axi_spi_AWADDR,    m_axi_qspi_AWADDR,    m_axi_uart_AWADDR,     m_axi_gpio_AWADDR}),
           .M_AXI_AWPROT  (),
-          .M_AXI_AWVALID ({m_axi_timer_AWVALID,   m_axi_eth_AWVALID,   m_axi_spi_AWVALID,   m_axi_qspi_AWVALID,   m_axi_uart_AWVALID,    m_axi_gpio_AWVALID}),
-          .M_AXI_AWREADY ({m_axi_timer_AWREADY,   m_axi_eth_AWREADY,   m_axi_spi_AWREADY,   m_axi_qspi_AWREADY,   m_axi_uart_AWREADY,    m_axi_gpio_AWREADY}),
-          .M_AXI_WDATA   ({m_axi_timer_WDATA,     m_axi_eth_WDATA,     m_axi_spi_WDATA,     m_axi_qspi_WDATA,     m_axi_uart_WDATA,      m_axi_gpio_WDATA}),
-          .M_AXI_WSTRB   ({m_axi_timer_WSTRB,     m_axi_eth_WSTRB,     m_axi_spi_WSTRB,     m_axi_qspi_WSTRB,     m_axi_uart_WSTRB,      m_axi_gpio_WSTRB}),
-          .M_AXI_WVALID  ({m_axi_timer_WVALID,    m_axi_eth_WVALID,    m_axi_spi_WVALID,    m_axi_qspi_WVALID,    m_axi_uart_WVALID,     m_axi_gpio_WVALID}),
-          .M_AXI_WREADY  ({m_axi_timer_WREADY,    m_axi_eth_WREADY,    m_axi_spi_WREADY,    m_axi_qspi_WREADY,    m_axi_uart_WREADY,     m_axi_gpio_WREADY}),
-          .M_AXI_BRESP   ({m_axi_timer_BRESP,     m_axi_eth_BRESP,     m_axi_spi_BRESP,     m_axi_qspi_BRESP,     m_axi_uart_BRESP,      m_axi_gpio_BRESP}),
-          .M_AXI_BVALID  ({m_axi_timer_BVALID,    m_axi_eth_BVALID,    m_axi_spi_BVALID,    m_axi_qspi_BVALID,    m_axi_uart_BVALID,     m_axi_gpio_BVALID}),
-          .M_AXI_BREADY  ({m_axi_timer_BREADY,    m_axi_eth_BREADY,    m_axi_spi_BREADY,    m_axi_qspi_BREADY,    m_axi_uart_BREADY,     m_axi_gpio_BREADY}),
-          .M_AXI_ARADDR  ({m_axi_timer_ARADDR,    m_axi_eth_ARADDR,    m_axi_spi_ARADDR,    m_axi_qspi_ARADDR,    m_axi_uart_ARADDR,     m_axi_gpio_ARADDR}),
+          .M_AXI_AWVALID ({m_axi_vga_AWVALID,     m_axi_timer_AWVALID,   m_axi_eth_AWVALID,   m_axi_spi_AWVALID,   m_axi_qspi_AWVALID,   m_axi_uart_AWVALID,    m_axi_gpio_AWVALID}),
+          .M_AXI_AWREADY ({m_axi_vga_AWREADY,     m_axi_timer_AWREADY,   m_axi_eth_AWREADY,   m_axi_spi_AWREADY,   m_axi_qspi_AWREADY,   m_axi_uart_AWREADY,    m_axi_gpio_AWREADY}),
+          .M_AXI_WDATA   ({m_axi_vga_WDATA,       m_axi_timer_WDATA,     m_axi_eth_WDATA,     m_axi_spi_WDATA,     m_axi_qspi_WDATA,     m_axi_uart_WDATA,      m_axi_gpio_WDATA}),
+          .M_AXI_WSTRB   ({m_axi_vga_WSTRB,       m_axi_timer_WSTRB,     m_axi_eth_WSTRB,     m_axi_spi_WSTRB,     m_axi_qspi_WSTRB,     m_axi_uart_WSTRB,      m_axi_gpio_WSTRB}),
+          .M_AXI_WVALID  ({m_axi_vga_WVALID,      m_axi_timer_WVALID,    m_axi_eth_WVALID,    m_axi_spi_WVALID,    m_axi_qspi_WVALID,    m_axi_uart_WVALID,     m_axi_gpio_WVALID}),
+          .M_AXI_WREADY  ({m_axi_vga_WREADY,      m_axi_timer_WREADY,    m_axi_eth_WREADY,    m_axi_spi_WREADY,    m_axi_qspi_WREADY,    m_axi_uart_WREADY,     m_axi_gpio_WREADY}),
+          .M_AXI_BRESP   ({m_axi_vga_BRESP,       m_axi_timer_BRESP,     m_axi_eth_BRESP,     m_axi_spi_BRESP,     m_axi_qspi_BRESP,     m_axi_uart_BRESP,      m_axi_gpio_BRESP}),
+          .M_AXI_BVALID  ({m_axi_vga_BVALID,      m_axi_timer_BVALID,    m_axi_eth_BVALID,    m_axi_spi_BVALID,    m_axi_qspi_BVALID,    m_axi_uart_BVALID,     m_axi_gpio_BVALID}),
+          .M_AXI_BREADY  ({m_axi_vga_BREADY,      m_axi_timer_BREADY,    m_axi_eth_BREADY,    m_axi_spi_BREADY,    m_axi_qspi_BREADY,    m_axi_uart_BREADY,     m_axi_gpio_BREADY}),
+          .M_AXI_ARADDR  ({m_axi_vga_ARADDR,      m_axi_timer_ARADDR,    m_axi_eth_ARADDR,    m_axi_spi_ARADDR,    m_axi_qspi_ARADDR,    m_axi_uart_ARADDR,     m_axi_gpio_ARADDR}),
           .M_AXI_ARPROT  (),
-          .M_AXI_ARVALID ({m_axi_timer_ARVALID,   m_axi_eth_ARVALID,   m_axi_spi_ARVALID,   m_axi_qspi_ARVALID,   m_axi_uart_ARVALID,    m_axi_gpio_ARVALID}),
-          .M_AXI_ARREADY ({m_axi_timer_ARREADY,   m_axi_eth_ARREADY,   m_axi_spi_ARREADY,   m_axi_qspi_ARREADY,   m_axi_uart_ARREADY,    m_axi_gpio_ARREADY}),
-          .M_AXI_RDATA   ({m_axi_timer_RDATA,     m_axi_eth_RDATA,     m_axi_spi_RDATA,     m_axi_qspi_RDATA,     m_axi_uart_RDATA,      m_axi_gpio_RDATA}),
-          .M_AXI_RRESP   ({m_axi_timer_RRESP,     m_axi_eth_RRESP,     m_axi_spi_RRESP,     m_axi_qspi_RRESP,     m_axi_uart_RRESP,      m_axi_gpio_RRESP}),
-          .M_AXI_RVALID  ({m_axi_timer_RVALID,    m_axi_eth_RVALID,    m_axi_spi_RVALID,    m_axi_qspi_RVALID,    m_axi_uart_RVALID,     m_axi_gpio_RVALID}),
-          .M_AXI_RREADY  ({m_axi_timer_RREADY,    m_axi_eth_RREADY,    m_axi_spi_RREADY,    m_axi_qspi_RREADY,    m_axi_uart_RREADY,     m_axi_gpio_RREADY})
+          .M_AXI_ARVALID ({m_axi_vga_ARVALID,     m_axi_timer_ARVALID,   m_axi_eth_ARVALID,   m_axi_spi_ARVALID,   m_axi_qspi_ARVALID,   m_axi_uart_ARVALID,    m_axi_gpio_ARVALID}),
+          .M_AXI_ARREADY ({m_axi_vga_ARREADY,     m_axi_timer_ARREADY,   m_axi_eth_ARREADY,   m_axi_spi_ARREADY,   m_axi_qspi_ARREADY,   m_axi_uart_ARREADY,    m_axi_gpio_ARREADY}),
+          .M_AXI_RDATA   ({m_axi_vga_RDATA,       m_axi_timer_RDATA,     m_axi_eth_RDATA,     m_axi_spi_RDATA,     m_axi_qspi_RDATA,     m_axi_uart_RDATA,      m_axi_gpio_RDATA}),
+          .M_AXI_RRESP   ({m_axi_vga_RRESP,       m_axi_timer_RRESP,     m_axi_eth_RRESP,     m_axi_spi_RRESP,     m_axi_qspi_RRESP,     m_axi_uart_RRESP,      m_axi_gpio_RRESP}),
+          .M_AXI_RVALID  ({m_axi_vga_RVALID,      m_axi_timer_RVALID,    m_axi_eth_RVALID,    m_axi_spi_RVALID,    m_axi_qspi_RVALID,    m_axi_uart_RVALID,     m_axi_gpio_RVALID}),
+          .M_AXI_RREADY  ({m_axi_vga_RREADY,      m_axi_timer_RREADY,    m_axi_eth_RREADY,    m_axi_spi_RREADY,    m_axi_qspi_RREADY,    m_axi_uart_RREADY,     m_axi_gpio_RREADY})
      );
 
      Veronica inst_veronica
@@ -715,12 +844,12 @@ module system_ps_wrapper
           .io_aclk(axi_cpu_clk),
           .io_arstn(sys_rstgen_peripheral_aresetn),
           .io_ddr_clk(axi_ddr_ctrl_ui_clk),
-          .io_irq({{32-7{1'b0}},axi_quad_spi_irq, axi_spi_irq, axi_ethernet_irq, axi_uartlite_irq, IRQ}),
-          .io_timer_irq(timer_irq),
+          .io_irq({{32-8{1'b0}},axi_tft_irq, axi_quad_spi_irq, axi_spi_irq, axi_ethernet_irq, axi_uartlite_irq, IRQ}),
+          .io_timer_irq(axi_timer_irq),
           .io_s_axi_dma0_aclk(s_axi_dma_aclk),
           .io_s_axi_dma0_arstn(io_s_axi_dma_arstn),
-          .io_s_axi_dma1_aclk(1'b0),
-          .io_s_axi_dma1_arstn(1'b0),
+          .io_s_axi_dma1_aclk(axi_cpu_clk),
+          .io_s_axi_dma1_arstn(sys_rstgen_peripheral_aresetn),
           .m_axi_acc_araddr(M_AXI_araddr),
           .m_axi_acc_arprot(M_AXI_arprot),
           .m_axi_acc_arready(M_AXI_arready),
@@ -815,31 +944,39 @@ module system_ps_wrapper
           .s_axi_dma0_wready(s_axi_dma_wready),
           .s_axi_dma0_wstrb(s_axi_dma_wstrb),
           .s_axi_dma0_wvalid(s_axi_dma_wvalid),
-          .s_axi_dma1_araddr(0),
-          .s_axi_dma1_arcache(0),
-          .s_axi_dma1_arlen(0),
-          .s_axi_dma1_arprot(0),
-          .s_axi_dma1_arready(),
-          .s_axi_dma1_arsize(0),
-          .s_axi_dma1_arvalid(1'b0),
-          .s_axi_dma1_awaddr(0),
-          .s_axi_dma1_awcache(0),
-          .s_axi_dma1_awlen(0),
-          .s_axi_dma1_awprot(0),
-          .s_axi_dma1_awready(),
-          .s_axi_dma1_awsize(0),
-          .s_axi_dma1_awvalid(1'b0),
-          .s_axi_dma1_bready(1'b0),
-          .s_axi_dma1_bvalid(),
-          .s_axi_dma1_rdata(),
-          .s_axi_dma1_rlast(),
-          .s_axi_dma1_rready(1'b0),
-          .s_axi_dma1_rvalid(),
-          .s_axi_dma1_wdata(0),
-          .s_axi_dma1_wlast(1'b0),
-          .s_axi_dma1_wready(),
-          .s_axi_dma1_wstrb(0),
-          .s_axi_dma1_wvalid(1'b0)
+          .s_axi_dma0_bresp(s_axi_dma_bresp),
+          .s_axi_dma0_rresp(s_axi_dma_rresp),
+          .s_axi_dma0_arburst(s_axi_dma_arburst),
+          .s_axi_dma0_awburst(s_axi_dma_awburst),
+          .s_axi_dma1_araddr(s_axi_dma_vga_araddr),
+          .s_axi_dma1_arcache(s_axi_dma_vga_arcache),
+          .s_axi_dma1_arlen(s_axi_dma_vga_arlen),
+          .s_axi_dma1_arprot(s_axi_dma_vga_arprot),
+          .s_axi_dma1_arready(s_axi_dma_vga_arready),
+          .s_axi_dma1_arsize(s_axi_dma_vga_arsize),
+          .s_axi_dma1_arvalid(s_axi_dma_vga_arvalid),
+          .s_axi_dma1_awaddr(s_axi_dma_vga_awaddr),
+          .s_axi_dma1_awcache(s_axi_dma_vga_awcache),
+          .s_axi_dma1_awlen(s_axi_dma_vga_awlen),
+          .s_axi_dma1_awprot(s_axi_dma_vga_awprot),
+          .s_axi_dma1_awready(s_axi_dma_vga_awready),
+          .s_axi_dma1_awsize(s_axi_dma_vga_awsize),
+          .s_axi_dma1_awvalid(s_axi_dma_vga_awvalid),
+          .s_axi_dma1_bready(s_axi_dma_vga_bready),
+          .s_axi_dma1_bvalid(s_axi_dma_vga_bvalid),
+          .s_axi_dma1_rdata(s_axi_dma_vga_rdata),
+          .s_axi_dma1_rlast(s_axi_dma_vga_rlast),
+          .s_axi_dma1_rready(s_axi_dma_vga_rready),
+          .s_axi_dma1_rvalid(s_axi_dma_vga_rvalid),
+          .s_axi_dma1_wdata(s_axi_dma_vga_wdata),
+          .s_axi_dma1_wlast(s_axi_dma_vga_wlast),
+          .s_axi_dma1_wready(s_axi_dma_vga_wready),
+          .s_axi_dma1_wstrb(s_axi_dma_vga_wstrb),
+          .s_axi_dma1_wvalid(s_axi_dma_vga_wvalid),
+          .s_axi_dma1_bresp(s_axi_dma_vga_bresp),
+          .s_axi_dma1_rresp(s_axi_dma_vga_rresp),
+          .s_axi_dma1_arburst(s_axi_dma_vga_arburst),
+          .s_axi_dma1_awburst(s_axi_dma_vga_awburst)
      );
 
      sys_rstgen inst_sys_rstgen

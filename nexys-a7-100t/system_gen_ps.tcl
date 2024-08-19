@@ -12,6 +12,8 @@ set_property CONFIG.PRIM_IN_FREQ 100.000 [get_ips clk_wiz_1]
 set_property CONFIG.USE_RESET false [get_ips clk_wiz_1]
 set_property CONFIG.CLKOUT2_USED {true} [get_ips clk_wiz_1]
 set_property CONFIG.CLKOUT2_REQUESTED_OUT_FREQ {200.000} [get_ips clk_wiz_1]
+set_property CONFIG.CLKOUT3_USED {true} [get_ips clk_wiz_1]
+set_property CONFIG.CLKOUT3_REQUESTED_OUT_FREQ {25.000} [get_ips clk_wiz_1]
 
 set_property generate_synth_checkpoint false [get_files clk_wiz_1.xci]
 
@@ -40,6 +42,17 @@ ip_vlvn_version_check "xilinx.com:ip:axi_timer:2.0"
 create_ip -vlnv xilinx.com:ip:axi_timer:2.0 -module_name axi_double_timer
 
 set_property generate_synth_checkpoint false [get_files axi_double_timer.xci]
+
+#create tft vga display
+ip_vlvn_version_check "xilinx.com:ip:axi_tft:2.0"
+
+create_ip -vlnv xilinx.com:ip:axi_tft:2.0 -module_name axi_tft_vga
+set_property CONFIG.C_EN_I2C_INTF {0} [get_ips axi_tft_vga]
+set_property CONFIG.C_M_AXI_DATA_WIDTH {32} [get_ips axi_tft_vga]
+set_property CONFIG.C_TFT_INTERFACE {0} [get_ips axi_tft_vga]
+set_property CONFIG.C_DEFAULT_TFT_BASE_ADDR {0x0000000090000000} [get_ips axi_tft_vga]
+
+set_property generate_synth_checkpoint false [get_files axi_tft_vga.xci]
 
 # create uart lite
 ip_vlvn_version_check "xilinx.com:ip:axi_uartlite:2.0"

@@ -38,6 +38,12 @@ module system
     output  [1:0]     eth_txd,
     output            eth_refclk,
     input             eth_50mclk,
+    //vga
+    output  [ 3:0]    vga_r,
+    output  [ 3:0]    vga_g,
+    output  [ 3:0]    vga_b,
+    output            vga_hs,
+    output            vga_vs,
     // leds
     output  [15:0]    leds,
     // slide switches
@@ -65,6 +71,14 @@ module system
   wire          MII_tx_clk;
   wire          MII_tx_en;
   wire  [3:0]   MII_txd;
+
+  wire  [5:0]   s_vga_r;
+  wire  [5:0]   s_vga_g;
+  wire  [5:0]   s_vga_b;
+
+  assign vga_r = (s_vga_r > 15 ? 4'b1111 : s_vga_r[3:0]);
+  assign vga_g = (s_vga_g > 15 ? 4'b1111 : s_vga_g[3:0]);
+  assign vga_b = (s_vga_b > 15 ? 4'b1111 : s_vga_b[3:0]);
 
   assign ftdi_cts = ftdi_rts;
 
@@ -152,36 +166,28 @@ module system
     .QSPI_0_ss_io(qspi_csn),
     .s_axi_dma_aclk(1'b0),
     .s_axi_dma_araddr(32'h00000000),
-    //.s_axi_dma_arburst(2'b00),
+    .s_axi_dma_arburst(2'b00),
     .s_axi_dma_arcache(4'b0000),
-    //.s_axi_dma_arid(2'b00),
     .s_axi_dma_arlen(8'b00000000),
-    //.s_axi_dma_arlock(1'b0),
     .s_axi_dma_arprot(3'b000),
-    //.s_axi_dma_arqos(4'b0000),
     .s_axi_dma_arready(),
     .s_axi_dma_arsize(3'b000),
     .s_axi_dma_arvalid(1'b0),
     .s_axi_dma_awaddr(32'h00000000),
-    //.s_axi_dma_awburst(2'b00),
+    .s_axi_dma_awburst(2'b00),
     .s_axi_dma_awcache(4'b0000),
-    //.s_axi_dma_awid(2'b00),
     .s_axi_dma_awlen(8'b00000000),
-    //.s_axi_dma_awlock(1'b0),
     .s_axi_dma_awprot(3'b000),
-    //.s_axi_dma_awqos(4'b0000),
     .s_axi_dma_awready(),
     .s_axi_dma_awsize(3'b000),
     .s_axi_dma_awvalid(1'b0),
-    //.s_axi_dma_bid(),
     .s_axi_dma_bready(1'b0),
-    //.s_axi_dma_bresp(),
+    .s_axi_dma_bresp(),
     .s_axi_dma_bvalid(),
     .s_axi_dma_rdata(),
-    //.s_axi_dma_rid(),
     .s_axi_dma_rlast(),
     .s_axi_dma_rready(1'b0),
-    //.s_axi_dma_rresp(),
+    .s_axi_dma_rresp(),
     .s_axi_dma_rvalid(),
     .s_axi_dma_wdata(32'h00000000),
     .s_axi_dma_wlast(1'b0),
@@ -207,6 +213,11 @@ module system
     .spi_ss_o(),
     .spi_ss_t(),
     .sys_clk(clk),
-    .sys_rstn(resetn)
+    .sys_rstn(resetn),
+    .vga_hsync(vga_hs),
+    .vga_vsync(vga_vs),
+    .vga_r(s_vga_r),
+    .vga_g(s_vga_g),
+    .vga_b(s_vga_b)
   );
 endmodule
