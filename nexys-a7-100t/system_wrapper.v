@@ -55,7 +55,12 @@ module system
     output            ftdi_cts,
     //qspi
     inout  [3:0]      qspi_dq,
-    output            qspi_csn
+    output            qspi_csn,
+    // jtag
+    input           tck,
+    input           tms,
+    input           tdi,
+    output          tdo
   );
 
   wire          sys_clk;
@@ -142,11 +147,11 @@ module system
     .MII_txd(MII_txd),
     .M_AXI_araddr(),
     .M_AXI_arprot(),
-    .M_AXI_arready(1'b0),
+    .M_AXI_arready(1'b1),
     .M_AXI_arvalid(),
     .M_AXI_awaddr(),
     .M_AXI_awprot(),
-    .M_AXI_awready(1'b0),
+    .M_AXI_awready(1'b1),
     .M_AXI_awvalid(),
     .M_AXI_bready(),
     .M_AXI_bresp(3'b000),
@@ -156,7 +161,7 @@ module system
     .M_AXI_rresp(3'b000),
     .M_AXI_rvalid(1'b00),
     .M_AXI_wdata(),
-    .M_AXI_wready(1'b0),
+    .M_AXI_wready(1'b1),
     .M_AXI_wstrb(),
     .M_AXI_wvalid(),
     .QSPI_0_io0_io(qspi_dq[0]),
@@ -164,6 +169,7 @@ module system
     .QSPI_0_io2_io(qspi_dq[2]),
     .QSPI_0_io3_io(qspi_dq[3]),
     .QSPI_0_ss_io(qspi_csn),
+    .s_axi_dma_arst(1'b0),
     .s_axi_dma_aclk(1'b0),
     .s_axi_dma_araddr(32'h00000000),
     .s_axi_dma_arburst(2'b00),
@@ -181,12 +187,12 @@ module system
     .s_axi_dma_awready(),
     .s_axi_dma_awsize(3'b000),
     .s_axi_dma_awvalid(1'b0),
-    .s_axi_dma_bready(1'b0),
+    .s_axi_dma_bready(1'b1),
     .s_axi_dma_bresp(),
     .s_axi_dma_bvalid(),
     .s_axi_dma_rdata(),
     .s_axi_dma_rlast(),
-    .s_axi_dma_rready(1'b0),
+    .s_axi_dma_rready(1'b1),
     .s_axi_dma_rresp(),
     .s_axi_dma_rvalid(),
     .s_axi_dma_wdata(32'h00000000),
@@ -218,6 +224,11 @@ module system
     .vga_vsync(vga_vs),
     .vga_r(s_vga_r),
     .vga_g(s_vga_g),
-    .vga_b(s_vga_b)
+    .vga_b(s_vga_b),
+    // jtag
+    .tck(tck),
+    .tms(tms),
+    .tdi(tdi),
+    .tdo(tdo)
   );
 endmodule
