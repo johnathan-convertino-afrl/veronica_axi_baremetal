@@ -86,37 +86,37 @@ module system_ps_wrapper
           output    [31:0]    gpio_io_o,
           output    [31:0]    gpio_io_t,
           output              s_axi_clk,
-          input               s_axi_dma_arst,
-          input               s_axi_dma_aclk,
-          input               s_axi_dma_awvalid,
-          output              s_axi_dma_awready,
-          input     [31:0]    s_axi_dma_awaddr,
-          input     [ 7:0]    s_axi_dma_awlen,
-          input     [ 2:0]    s_axi_dma_awsize,
-          input     [ 1:0]    s_axi_dma_awburst,
-          input     [ 3:0]    s_axi_dma_awcache,
-          input     [ 2:0]    s_axi_dma_awprot,
-          input               s_axi_dma_wvalid,
-          output              s_axi_dma_wready,
-          input     [31:0]    s_axi_dma_wdata,
-          input     [ 3:0]    s_axi_dma_wstrb,
-          input               s_axi_dma_wlast,
-          output              s_axi_dma_bvalid,
-          input               s_axi_dma_bready,
-          output    [ 1:0]    s_axi_dma_bresp,
-          input               s_axi_dma_arvalid,
-          output              s_axi_dma_arready,
-          input     [31:0]    s_axi_dma_araddr,
-          input     [ 7:0]    s_axi_dma_arlen,
-          input     [ 2:0]    s_axi_dma_arsize,
-          input     [ 1:0]    s_axi_dma_arburst,
-          input     [ 3:0]    s_axi_dma_arcache,
-          input     [ 2:0]    s_axi_dma_arprot,
-          output              s_axi_dma_rvalid,
-          input               s_axi_dma_rready,
-          output    [31:0]    s_axi_dma_rdata,
-          output    [ 1:0]    s_axi_dma_rresp,
-          output              s_axi_dma_rlast,
+          //input               s_axi_dma_arst,
+          //input               s_axi_dma_aclk,
+          //input               s_axi_dma_awvalid,
+          //output              s_axi_dma_awready,
+          //input     [31:0]    s_axi_dma_awaddr,
+          //input     [ 7:0]    s_axi_dma_awlen,
+          //input     [ 2:0]    s_axi_dma_awsize,
+          //input     [ 1:0]    s_axi_dma_awburst,
+          //input     [ 3:0]    s_axi_dma_awcache,
+          //input     [ 2:0]    s_axi_dma_awprot,
+          //input               s_axi_dma_wvalid,
+          //output              s_axi_dma_wready,
+          //input     [31:0]    s_axi_dma_wdata,
+          //input     [ 3:0]    s_axi_dma_wstrb,
+          //input               s_axi_dma_wlast,
+          //output              s_axi_dma_bvalid,
+          //input               s_axi_dma_bready,
+          //output    [ 1:0]    s_axi_dma_bresp,
+          //input               s_axi_dma_arvalid,
+          //output              s_axi_dma_arready,
+          //input     [31:0]    s_axi_dma_araddr,
+          //input     [ 7:0]    s_axi_dma_arlen,
+          //input     [ 2:0]    s_axi_dma_arsize,
+          //input     [ 1:0]    s_axi_dma_arburst,
+          //input     [ 3:0]    s_axi_dma_arcache,
+          //input     [ 2:0]    s_axi_dma_arprot,
+          //output              s_axi_dma_rvalid,
+          //input               s_axi_dma_rready,
+          //output    [31:0]    s_axi_dma_rdata,
+          //output    [ 1:0]    s_axi_dma_rresp,
+          //output              s_axi_dma_rlast,
           input               spi_io0_i,
           output              spi_io0_o,
           output              spi_io0_t,
@@ -228,64 +228,103 @@ module system_ps_wrapper
      wire           m_axi_gpio_WVALID;
 
      //axi lite perf (dbus only)
-     wire [31:0]    m_axi_perf_ARADDR;
-     wire           m_axi_perf_ARREADY;
-     wire           m_axi_perf_ARVALID;
-     wire [31:0]    m_axi_perf_AWADDR;
-     wire           m_axi_perf_AWREADY;
-     wire           m_axi_perf_AWVALID;
-     wire           m_axi_perf_BREADY;
-     wire [ 1:0]    m_axi_perf_BRESP;
-     wire           m_axi_perf_BVALID;
-     wire [31:0]    m_axi_perf_RDATA;
-     wire           m_axi_perf_RREADY;
-     wire [ 1:0]    m_axi_perf_RRESP;
-     wire           m_axi_perf_RVALID;
-     wire [31:0]    m_axi_perf_WDATA;
-     wire           m_axi_perf_WREADY;
-     wire [ 3:0]    m_axi_perf_WSTRB;
-     wire           m_axi_perf_WVALID;
-     wire [ 2:0]    m_axi_perf_APROT;
-     wire [ 2:0]    m_axi_perf_AWPROT;
+     wire [31:0]    s_axi_perf_ARADDR;
+     wire           s_axi_perf_ARREADY;
+     wire           s_axi_perf_ARVALID;
+     wire [31:0]    s_axi_perf_AWADDR;
+     wire           s_axi_perf_AWREADY;
+     wire           s_axi_perf_AWVALID;
+     wire           s_axi_perf_BREADY;
+     wire [ 1:0]    s_axi_perf_BRESP;
+     wire           s_axi_perf_BVALID;
+     wire [31:0]    s_axi_perf_RDATA;
+     wire           s_axi_perf_RREADY;
+     wire [ 1:0]    s_axi_perf_RRESP;
+     wire           s_axi_perf_RVALID;
+     wire [31:0]    s_axi_perf_WDATA;
+     wire           s_axi_perf_WREADY;
+     wire [ 3:0]    s_axi_perf_WSTRB;
+     wire           s_axi_perf_WVALID;
+     wire [ 2:0]    s_axi_perf_APROT;
+     wire [ 2:0]    s_axi_perf_AWPROT;
 
      //axi4 w/ID memory bus (ibus/dbus path)
-     wire [31:0]    m_axi_mbus_ARADDR;
-     wire [ 1:0]    m_axi_mbus_ARBURST;
-     wire [ 3:0]    m_axi_mbus_ARCACHE;
-     wire [ 3:0]    m_axi_mbus_ARID;
-     wire [ 7:0]    m_axi_mbus_ARLEN;
-     wire [ 2:0]    m_axi_mbus_ARPROT;
-     wire           m_axi_mbus_ARREADY;
-     wire [ 2:0]    m_axi_mbus_ARSIZE;
-     wire           m_axi_mbus_ARVALID;
-     wire [31:0]    m_axi_mbus_AWADDR;
-     wire [ 1:0]    m_axi_mbus_AWBURST;
-     wire [ 3:0]    m_axi_mbus_AWCACHE;
-     wire [ 3:0]    m_axi_mbus_AWID;
-     wire [ 7:0]    m_axi_mbus_AWLEN;
-     wire [ 2:0]    m_axi_mbus_AWPROT;
-     wire           m_axi_mbus_AWREADY;
-     wire [ 2:0]    m_axi_mbus_AWSIZE;
-     wire           m_axi_mbus_AWVALID;
-     wire [ 3:0]    m_axi_mbus_BID;
-     wire           m_axi_mbus_BREADY;
-     wire           m_axi_mbus_BVALID;
-     wire [31:0]    m_axi_mbus_RDATA;
-     wire [ 3:0]    m_axi_mbus_RID;
-     wire           m_axi_mbus_RLAST;
-     wire           m_axi_mbus_RREADY;
-     wire           m_axi_mbus_RVALID;
-     wire [31:0]    m_axi_mbus_WDATA;
-     wire           m_axi_mbus_WLAST;
-     wire           m_axi_mbus_WREADY;
-     wire [ 3:0]    m_axi_mbus_WSTRB;
-     wire           m_axi_mbus_WVALID;
-     wire [ 0:0]    m_axi_mbus_ARLOCK;
-     wire [ 3:0]    m_axi_mbus_ARQOS;
-     wire [ 0:0]    m_axi_mbus_AWLOCK;
-     wire [ 3:0]    m_axi_mbus_AWQOS;
-     wire [ 1:0]    m_axi_mbus_RRESP;
-     wire [ 1:0]    m_axi_mbus_BRESP;
+     wire [31:0]    s_axi_mbus_ARADDR;
+     wire [ 1:0]    s_axi_mbus_ARBURST;
+     wire [ 3:0]    s_axi_mbus_ARCACHE;
+     wire [ 3:0]    s_axi_mbus_ARID;
+     wire [ 7:0]    s_axi_mbus_ARLEN;
+     wire [ 2:0]    s_axi_mbus_ARPROT;
+     wire           s_axi_mbus_ARREADY;
+     wire [ 2:0]    s_axi_mbus_ARSIZE;
+     wire           s_axi_mbus_ARVALID;
+     wire [31:0]    s_axi_mbus_AWADDR;
+     wire [ 1:0]    s_axi_mbus_AWBURST;
+     wire [ 3:0]    s_axi_mbus_AWCACHE;
+     wire [ 3:0]    s_axi_mbus_AWID;
+     wire [ 7:0]    s_axi_mbus_AWLEN;
+     wire [ 2:0]    s_axi_mbus_AWPROT;
+     wire           s_axi_mbus_AWREADY;
+     wire [ 2:0]    s_axi_mbus_AWSIZE;
+     wire           s_axi_mbus_AWVALID;
+     wire [ 3:0]    s_axi_mbus_BID;
+     wire           s_axi_mbus_BREADY;
+     wire           s_axi_mbus_BVALID;
+     wire [31:0]    s_axi_mbus_RDATA;
+     wire [ 3:0]    s_axi_mbus_RID;
+     wire           s_axi_mbus_RLAST;
+     wire           s_axi_mbus_RREADY;
+     wire           s_axi_mbus_RVALID;
+     wire [31:0]    s_axi_mbus_WDATA;
+     wire           s_axi_mbus_WLAST;
+     wire           s_axi_mbus_WREADY;
+     wire [ 3:0]    s_axi_mbus_WSTRB;
+     wire           s_axi_mbus_WVALID;
+     wire [ 0:0]    s_axi_mbus_ARLOCK;
+     wire [ 3:0]    s_axi_mbus_ARQOS;
+     wire [ 0:0]    s_axi_mbus_AWLOCK;
+     wire [ 3:0]    s_axi_mbus_AWQOS;
+     wire [ 1:0]    s_axi_mbus_RRESP;
+     wire [ 1:0]    s_axi_mbus_BRESP;
+
+     //axi4 w/ID memory bus DDR (ibus/dbus path)
+     wire [31:0]    m_axi_ddr_ARADDR;
+     wire [ 1:0]    m_axi_ddr_ARBURST;
+     wire [ 3:0]    m_axi_ddr_ARCACHE;
+     wire [ 3:0]    m_axi_ddr_ARID;
+     wire [ 7:0]    m_axi_ddr_ARLEN;
+     wire [ 2:0]    m_axi_ddr_ARPROT;
+     wire           m_axi_ddr_ARREADY;
+     wire [ 2:0]    m_axi_ddr_ARSIZE;
+     wire           m_axi_ddr_ARVALID;
+     wire [31:0]    m_axi_ddr_AWADDR;
+     wire [ 1:0]    m_axi_ddr_AWBURST;
+     wire [ 3:0]    m_axi_ddr_AWCACHE;
+     wire [ 3:0]    m_axi_ddr_AWID;
+     wire [ 7:0]    m_axi_ddr_AWLEN;
+     wire [ 2:0]    m_axi_ddr_AWPROT;
+     wire           m_axi_ddr_AWREADY;
+     wire [ 2:0]    m_axi_ddr_AWSIZE;
+     wire           m_axi_ddr_AWVALID;
+     wire [ 3:0]    m_axi_ddr_BID;
+     wire           m_axi_ddr_BREADY;
+     wire           m_axi_ddr_BVALID;
+     wire [31:0]    m_axi_ddr_RDATA;
+     wire [ 3:0]    m_axi_ddr_RID;
+     wire           m_axi_ddr_RLAST;
+     wire           m_axi_ddr_RREADY;
+     wire           m_axi_ddr_RVALID;
+     wire [31:0]    m_axi_ddr_WDATA;
+     wire           m_axi_ddr_WLAST;
+     wire           m_axi_ddr_WREADY;
+     wire [ 3:0]    m_axi_ddr_WSTRB;
+     wire           m_axi_ddr_WVALID;
+     wire [ 0:0]    m_axi_ddr_ARLOCK;
+     wire [ 3:0]    m_axi_ddr_ARQOS;
+     wire [ 0:0]    m_axi_ddr_AWLOCK;
+     wire [ 3:0]    m_axi_ddr_AWQOS;
+     wire [ 1:0]    m_axi_ddr_RRESP;
+     wire [ 1:0]    m_axi_ddr_BRESP;
 
      //axi lite qspi
      wire [31:0]    m_axi_qspi_ARADDR;
@@ -412,6 +451,8 @@ module system_ps_wrapper
      wire                s_axi_dma_vga_wready;
      wire      [ 3:0]    s_axi_dma_vga_wstrb;
      wire                s_axi_dma_vga_wvalid;
+     wire      [ 3:0]    s_axi_dma_vga_bid; //dummy
+     wire      [ 3:0]    s_axi_dma_vga_rid; //dummy
 
      //distribute clock for axi and assign to output for m_axi_acc
      assign s_axi_clk = axi_cpu_clk;
@@ -482,43 +523,43 @@ module system_ps_wrapper
           .ddr2_ras_n(DDR_ras_n),
           .ddr2_we_n(DDR_we_n),
           .mmcm_locked(axi_ddr_ctrl_mmcm_locked),
-          .s_axi_araddr(m_axi_mbus_ARADDR & 32'h0FFFFFFF),
-          .s_axi_arburst(m_axi_mbus_ARBURST),
-          .s_axi_arcache(m_axi_mbus_ARCACHE),
-          .s_axi_arid(m_axi_mbus_ARID),
-          .s_axi_arlen(m_axi_mbus_ARLEN),
-          .s_axi_arlock(m_axi_mbus_ARLOCK),
-          .s_axi_arprot(m_axi_mbus_ARPROT),
-          .s_axi_arqos(m_axi_mbus_ARQOS),
-          .s_axi_arready(m_axi_mbus_ARREADY),
-          .s_axi_arsize(m_axi_mbus_ARSIZE),
-          .s_axi_arvalid(m_axi_mbus_ARVALID),
-          .s_axi_awaddr(m_axi_mbus_AWADDR & 32'h0FFFFFFF),
-          .s_axi_awburst(m_axi_mbus_AWBURST),
-          .s_axi_awcache(m_axi_mbus_AWCACHE),
-          .s_axi_awid(m_axi_mbus_AWID),
-          .s_axi_awlen(m_axi_mbus_AWLEN),
-          .s_axi_awlock(m_axi_mbus_AWLOCK),
-          .s_axi_awprot(m_axi_mbus_AWPROT),
-          .s_axi_awqos(m_axi_mbus_AWQOS),
-          .s_axi_awready(m_axi_mbus_AWREADY),
-          .s_axi_awsize(m_axi_mbus_AWSIZE),
-          .s_axi_awvalid(m_axi_mbus_AWVALID),
-          .s_axi_bid(m_axi_mbus_BID),
-          .s_axi_bready(m_axi_mbus_BREADY),
-          .s_axi_bvalid(m_axi_mbus_BVALID),
-          .s_axi_bresp(m_axi_mbus_BRESP),
-          .s_axi_rdata(m_axi_mbus_RDATA),
-          .s_axi_rid(m_axi_mbus_RID),
-          .s_axi_rlast(m_axi_mbus_RLAST),
-          .s_axi_rready(m_axi_mbus_RREADY),
-          .s_axi_rvalid(m_axi_mbus_RVALID),
-          .s_axi_rresp(m_axi_mbus_RRESP),
-          .s_axi_wdata(m_axi_mbus_WDATA),
-          .s_axi_wlast(m_axi_mbus_WLAST),
-          .s_axi_wready(m_axi_mbus_WREADY),
-          .s_axi_wstrb(m_axi_mbus_WSTRB),
-          .s_axi_wvalid(m_axi_mbus_WVALID),
+          .s_axi_araddr(m_axi_ddr_ARADDR & 32'h0FFFFFFF),
+          .s_axi_arburst(m_axi_ddr_ARBURST),
+          .s_axi_arcache(m_axi_ddr_ARCACHE),
+          .s_axi_arid(m_axi_ddr_ARID),
+          .s_axi_arlen(m_axi_ddr_ARLEN),
+          .s_axi_arlock(m_axi_ddr_ARLOCK),
+          .s_axi_arprot(m_axi_ddr_ARPROT),
+          .s_axi_arqos(m_axi_ddr_ARQOS),
+          .s_axi_arready(m_axi_ddr_ARREADY),
+          .s_axi_arsize(m_axi_ddr_ARSIZE),
+          .s_axi_arvalid(m_axi_ddr_ARVALID),
+          .s_axi_awaddr(m_axi_ddr_AWADDR & 32'h0FFFFFFF),
+          .s_axi_awburst(m_axi_ddr_AWBURST),
+          .s_axi_awcache(m_axi_ddr_AWCACHE),
+          .s_axi_awid(m_axi_ddr_AWID),
+          .s_axi_awlen(m_axi_ddr_AWLEN),
+          .s_axi_awlock(m_axi_ddr_AWLOCK),
+          .s_axi_awprot(m_axi_ddr_AWPROT),
+          .s_axi_awqos(m_axi_ddr_AWQOS),
+          .s_axi_awready(m_axi_ddr_AWREADY),
+          .s_axi_awsize(m_axi_ddr_AWSIZE),
+          .s_axi_awvalid(m_axi_ddr_AWVALID),
+          .s_axi_bid(m_axi_ddr_BID),
+          .s_axi_bready(m_axi_ddr_BREADY),
+          .s_axi_bvalid(m_axi_ddr_BVALID),
+          .s_axi_bresp(m_axi_ddr_BRESP),
+          .s_axi_rdata(m_axi_ddr_RDATA),
+          .s_axi_rid(m_axi_ddr_RID),
+          .s_axi_rlast(m_axi_ddr_RLAST),
+          .s_axi_rready(m_axi_ddr_RREADY),
+          .s_axi_rvalid(m_axi_ddr_RVALID),
+          .s_axi_rresp(m_axi_ddr_RRESP),
+          .s_axi_wdata(m_axi_ddr_WDATA),
+          .s_axi_wlast(m_axi_ddr_WLAST),
+          .s_axi_wready(m_axi_ddr_WREADY),
+          .s_axi_wstrb(m_axi_ddr_WSTRB),
+          .s_axi_wvalid(m_axi_ddr_WVALID),
           .sys_clk_i(ddr_clk),
           .sys_rst(sys_rstn),
           .ui_clk(axi_ddr_ctrl_ui_clk),
@@ -726,8 +767,8 @@ module system_ps_wrapper
      (
           .s_axi_aclk(axi_cpu_clk),
           .s_axi_aresetn(sys_rstgen_peripheral_aresetn),
-          .m_axi_aclk(axi_cpu_clk),
-          .m_axi_aresetn(sys_rstgen_peripheral_aresetn),
+          .m_axi_aclk(axi_ddr_ctrl_ui_clk),
+          .m_axi_aresetn(ddr_rstgen_peripheral_aresetn),
           .md_error(),
           .ip2intc_irpt(axi_tft_irq),
           .m_axi_arready(s_axi_dma_vga_arready),  // input wire m_axi_arready
@@ -813,28 +854,28 @@ module system_ps_wrapper
           .NS(7),      //tft vga, double timer, ethernet, spi, qspi, uart, gpio
           .SLAVE_ADDR({{32'h44A60000},{32'h44A50000},{32'h44A40000},{32'h44A30000},{32'h44A20000},{32'h44A10000},{32'h44A00000}}),
           .SLAVE_MASK({{32'hFFFF0000},{32'hFFFF0000},{32'hFFFF0000},{32'hFFFF0000},{32'hFFFF0000},{32'hFFFF0000},{32'hFFFF0000}})
-     ) inst_axilxbar (
+     ) inst_axilite_perf_xbar (
           .S_AXI_ACLK(axi_cpu_clk),
           .S_AXI_ARESETN(sys_rstgen_peripheral_aresetn),
-          .S_AXI_AWADDR(m_axi_perf_AWADDR),
-          .S_AXI_AWPROT(m_axi_perf_AWPROT),
-          .S_AXI_AWVALID(m_axi_perf_AWVALID),
-          .S_AXI_AWREADY(m_axi_perf_AWREADY),
-          .S_AXI_WDATA(m_axi_perf_WDATA),
-          .S_AXI_WSTRB(m_axi_perf_WSTRB),
-          .S_AXI_WVALID(m_axi_perf_AWVALID),
-          .S_AXI_WREADY(m_axi_perf_WREADY),
-          .S_AXI_BRESP(m_axi_perf_BRESP),
-          .S_AXI_BVALID(m_axi_perf_BVALID),
-          .S_AXI_BREADY(m_axi_perf_BREADY),
-          .S_AXI_ARADDR(m_axi_perf_ARADDR),
-          .S_AXI_ARPROT(m_axi_perf_APROT),
-          .S_AXI_ARVALID(m_axi_perf_ARVALID),
-          .S_AXI_ARREADY(m_axi_perf_ARREADY),
-          .S_AXI_RDATA(m_axi_perf_RDATA),
-          .S_AXI_RRESP(m_axi_perf_RRESP),
-          .S_AXI_RVALID(m_axi_perf_RVALID),
-          .S_AXI_RREADY(m_axi_perf_RREADY),
+          .S_AXI_AWADDR(s_axi_perf_AWADDR),
+          .S_AXI_AWPROT(s_axi_perf_AWPROT),
+          .S_AXI_AWVALID(s_axi_perf_AWVALID),
+          .S_AXI_AWREADY(s_axi_perf_AWREADY),
+          .S_AXI_WDATA(s_axi_perf_WDATA),
+          .S_AXI_WSTRB(s_axi_perf_WSTRB),
+          .S_AXI_WVALID(s_axi_perf_AWVALID),
+          .S_AXI_WREADY(s_axi_perf_WREADY),
+          .S_AXI_BRESP(s_axi_perf_BRESP),
+          .S_AXI_BVALID(s_axi_perf_BVALID),
+          .S_AXI_BREADY(s_axi_perf_BREADY),
+          .S_AXI_ARADDR(s_axi_perf_ARADDR),
+          .S_AXI_ARPROT(s_axi_perf_APROT),
+          .S_AXI_ARVALID(s_axi_perf_ARVALID),
+          .S_AXI_ARREADY(s_axi_perf_ARREADY),
+          .S_AXI_RDATA(s_axi_perf_RDATA),
+          .S_AXI_RRESP(s_axi_perf_RRESP),
+          .S_AXI_RVALID(s_axi_perf_RVALID),
+          .S_AXI_RREADY(s_axi_perf_RREADY),
           .M_AXI_AWADDR  ({m_axi_vga_AWADDR,      m_axi_timer_AWADDR,    m_axi_eth_AWADDR,    m_axi_spi_AWADDR,    m_axi_qspi_AWADDR,    m_axi_uart_AWADDR,     m_axi_gpio_AWADDR}),
           .M_AXI_AWPROT  (),
           .M_AXI_AWVALID ({m_axi_vga_AWVALID,     m_axi_timer_AWVALID,   m_axi_eth_AWVALID,   m_axi_spi_AWVALID,   m_axi_qspi_AWVALID,   m_axi_uart_AWVALID,    m_axi_gpio_AWVALID}),
@@ -856,6 +897,95 @@ module system_ps_wrapper
           .M_AXI_RREADY  ({m_axi_vga_RREADY,      m_axi_timer_RREADY,    m_axi_eth_RREADY,    m_axi_spi_RREADY,    m_axi_qspi_RREADY,    m_axi_uart_RREADY,     m_axi_gpio_RREADY})
      );
 
+     axixbar #(
+          .C_AXI_DATA_WIDTH(32),
+          .C_AXI_ADDR_WIDTH(32),
+          .C_AXI_ID_WIDTH(4),
+          .NM(2),   //IBUS/DBUS @ 0x90000000 plus 2 dma cores
+          .NS(1),   //single Large RAM slave, 0xC0000000 is 1 GB mask (0x40000000 twos compliment).
+          .SLAVE_ADDR({{32'h90000000}}),
+          .SLAVE_MASK({{32'hC0000000}})
+     ) inst_axi_mem_xbar (
+          //slave interface input (from masters, number masters)\
+          .S_AXI_ACLK(axi_ddr_ctrl_ui_clk),
+          .S_AXI_ARESETN(ddr_rstgen_peripheral_aresetn),
+          .S_AXI_AWID    ({4'h0,                  s_axi_mbus_AWID}),
+          .S_AXI_AWADDR  ({s_axi_dma_vga_awaddr,  s_axi_mbus_AWADDR}),
+          .S_AXI_AWLEN   ({s_axi_dma_vga_awlen,   s_axi_mbus_AWLEN}),
+          .S_AXI_AWSIZE  ({s_axi_dma_vga_awsize,  s_axi_mbus_AWSIZE}),
+          .S_AXI_AWBURST ({s_axi_dma_vga_awburst, s_axi_mbus_AWBURST}),
+          .S_AXI_AWLOCK  ({1'b0,                  s_axi_mbus_AWLOCK}),
+          .S_AXI_AWCACHE ({s_axi_dma_vga_awcache, s_axi_mbus_AWCACHE}),
+          .S_AXI_AWPROT  ({s_axi_dma_vga_awprot,  s_axi_mbus_AWPROT}),
+          .S_AXI_AWQOS   ({4'h0,                  s_axi_mbus_AWQOS}),
+          .S_AXI_AWVALID ({s_axi_dma_vga_awvalid, s_axi_mbus_AWVALID}),
+          .S_AXI_AWREADY ({s_axi_dma_vga_awready, s_axi_mbus_AWREADY}),
+          .S_AXI_WDATA   ({s_axi_dma_vga_wdata,   s_axi_mbus_WDATA}),
+          .S_AXI_WSTRB   ({s_axi_dma_vga_wstrb,   s_axi_mbus_WSTRB}),
+          .S_AXI_WLAST   ({s_axi_dma_vga_wlast,   s_axi_mbus_WLAST}),
+          .S_AXI_WVALID  ({s_axi_dma_vga_wvalid,  s_axi_mbus_WVALID}),
+          .S_AXI_WREADY  ({s_axi_dma_vga_wready,  s_axi_mbus_WREADY}),
+          .S_AXI_BID     ({s_axi_dma_vga_bid,     s_axi_mbus_BID}),
+          .S_AXI_BRESP   ({s_axi_dma_vga_bresp,   s_axi_mbus_BRESP}),
+          .S_AXI_BVALID  ({s_axi_dma_vga_bvalid,  s_axi_mbus_BVALID}),
+          .S_AXI_BREADY  ({s_axi_dma_vga_bready,  s_axi_mbus_BREADY}),
+          .S_AXI_ARID    ({4'h0,                  s_axi_mbus_ARID}),
+          .S_AXI_ARADDR  ({s_axi_dma_vga_araddr,  s_axi_mbus_ARADDR}),
+          .S_AXI_ARLEN   ({s_axi_dma_vga_arlen,   s_axi_mbus_ARLEN}),
+          .S_AXI_ARSIZE  ({s_axi_dma_vga_arsize,  s_axi_mbus_ARSIZE}),
+          .S_AXI_ARBURST ({s_axi_dma_vga_arburst, s_axi_mbus_ARBURST}),
+          .S_AXI_ARLOCK  ({1'b0,                  s_axi_mbus_ARLOCK}),
+          .S_AXI_ARCACHE ({s_axi_dma_vga_arcache, s_axi_mbus_ARCACHE}),
+          .S_AXI_ARPROT  ({s_axi_dma_vga_arprot,  s_axi_mbus_ARPROT}),
+          .S_AXI_ARQOS   ({4'h0,                  s_axi_mbus_ARQOS}),
+          .S_AXI_ARVALID ({s_axi_dma_vga_arvalid, s_axi_mbus_ARVALID}),
+          .S_AXI_ARREADY ({s_axi_dma_vga_arready, s_axi_mbus_ARREADY}),
+          .S_AXI_RID     ({s_axi_dma_vga_rid,     s_axi_mbus_RID}),
+          .S_AXI_RDATA   ({s_axi_dma_vga_rdata,   s_axi_mbus_RDATA}),
+          .S_AXI_RRESP   ({s_axi_dma_vga_rresp,   s_axi_mbus_RRESP}),
+          .S_AXI_RLAST   ({s_axi_dma_vga_rlast,   s_axi_mbus_RLAST}),
+          .S_AXI_RVALID  ({s_axi_dma_vga_rvalid,  s_axi_mbus_RVALID}),
+          .S_AXI_RREADY  ({s_axi_dma_vga_rready,  s_axi_mbus_RREADY}),
+          //master output (to slaves, number slaves)
+          .M_AXI_AWID(m_axi_ddr_AWID),
+          .M_AXI_AWADDR(m_axi_ddr_AWADDR),
+          .M_AXI_AWLEN(m_axi_ddr_AWLEN),
+          .M_AXI_AWSIZE(m_axi_ddr_AWSIZE),
+          .M_AXI_AWBURST(m_axi_ddr_AWBURST),
+          .M_AXI_AWLOCK(m_axi_ddr_AWLOCK),
+          .M_AXI_AWCACHE(m_axi_ddr_AWCACHE),
+          .M_AXI_AWPROT(m_axi_ddr_AWPROT),
+          .M_AXI_AWQOS(m_axi_ddr_AWQOS),
+          .M_AXI_AWVALID(m_axi_ddr_AWVALID),
+          .M_AXI_AWREADY(m_axi_ddr_AWREADY),
+          .M_AXI_WDATA(m_axi_ddr_WDATA),
+          .M_AXI_WSTRB(m_axi_ddr_WSTRB),
+          .M_AXI_WLAST(m_axi_ddr_WLAST),
+          .M_AXI_WVALID(m_axi_ddr_WVALID),
+          .M_AXI_WREADY(m_axi_ddr_WREADY),
+          .M_AXI_BID(m_axi_ddr_BID),
+          .M_AXI_BRESP(m_axi_ddr_BRESP),
+          .M_AXI_BVALID(m_axi_ddr_BVALID),
+          .M_AXI_BREADY(m_axi_ddr_BREADY),
+          .M_AXI_ARID(m_axi_ddr_ARID),
+          .M_AXI_ARADDR(m_axi_ddr_ARADDR),
+          .M_AXI_ARLEN(m_axi_ddr_ARLEN),
+          .M_AXI_ARSIZE(m_axi_ddr_ARSIZE),
+          .M_AXI_ARBURST(m_axi_ddr_ARBURST),
+          .M_AXI_ARLOCK(m_axi_ddr_ARLOCK),
+          .M_AXI_ARCACHE(m_axi_ddr_ARCACHE),
+          .M_AXI_ARPROT(m_axi_ddr_ARPROT),
+          .M_AXI_ARQOS(m_axi_ddr_ARQOS),
+          .M_AXI_ARVALID(m_axi_ddr_ARVALID),
+          .M_AXI_ARREADY(m_axi_ddr_ARREADY),
+          .M_AXI_RID(m_axi_ddr_RID),
+          .M_AXI_RDATA(m_axi_ddr_RDATA),
+          .M_AXI_RRESP(m_axi_ddr_RRESP),
+          .M_AXI_RLAST(m_axi_ddr_RLAST),
+          .M_AXI_RVALID(m_axi_ddr_RVALID),
+          .M_AXI_RREADY(m_axi_ddr_RREADY)
+     );
+
      Veronica inst_veronica
      (
           .io_aclk(axi_cpu_clk),
@@ -865,10 +995,10 @@ module system_ps_wrapper
           .io_ddr_rst(ddr_rstgen_peripheral_reset),
           .io_irq({{32-8{1'b0}},axi_tft_irq, axi_quad_spi_irq, axi_spi_irq, axi_ethernet_irq, axi_uartlite_irq, IRQ}),
           .io_timer_irq(axi_timer_irq),
-          .io_s_axi_dma0_aclk(s_axi_dma_aclk),
-          .io_s_axi_dma0_arst(s_axi_dma_arst),
-          .io_s_axi_dma1_aclk(axi_cpu_clk),
-          .io_s_axi_dma1_arst(sys_rstgen_peripheral_reset),
+          //.io_s_axi_dma0_aclk(s_axi_dma_aclk),
+          //.io_s_axi_dma0_arst(s_axi_dma_arst),
+          //.io_s_axi_dma1_aclk(axi_cpu_clk),
+          //.io_s_axi_dma1_arst(sys_rstgen_peripheral_reset),
           .io_jtag_tms(tms),
           .io_jtag_tdi(tdi),
           .io_jtag_tdo(tdo),
@@ -892,120 +1022,62 @@ module system_ps_wrapper
           .m_axi_acc_wready(M_AXI_wready),
           .m_axi_acc_wstrb(M_AXI_wstrb),
           .m_axi_acc_wvalid(M_AXI_wvalid),
-          .m_axi_perf_araddr(m_axi_perf_ARADDR),
-          .m_axi_perf_arready(m_axi_perf_ARREADY),
-          .m_axi_perf_arvalid(m_axi_perf_ARVALID),
-          .m_axi_perf_arprot(m_axi_perf_ARPROT),
-          .m_axi_perf_awaddr(m_axi_perf_AWADDR),
-          .m_axi_perf_awprot(m_axi_perf_AWPROT),
-          .m_axi_perf_awready(m_axi_perf_AWREADY),
-          .m_axi_perf_awvalid(m_axi_perf_AWVALID),
-          .m_axi_perf_bready(m_axi_perf_BREADY),
-          .m_axi_perf_bresp(m_axi_perf_BRESP),
-          .m_axi_perf_bvalid(m_axi_perf_BVALID),
-          .m_axi_perf_rdata(m_axi_perf_RDATA),
-          .m_axi_perf_rready(m_axi_perf_RREADY),
-          .m_axi_perf_rresp(m_axi_perf_RRESP),
-          .m_axi_perf_rvalid(m_axi_perf_RVALID),
-          .m_axi_perf_wdata(m_axi_perf_WDATA),
-          .m_axi_perf_wready(m_axi_perf_WREADY),
-          .m_axi_perf_wstrb(m_axi_perf_WSTRB),
-          .m_axi_perf_wvalid(m_axi_perf_WVALID),
-          .m_axi_mbus_araddr(m_axi_mbus_ARADDR),
-          .m_axi_mbus_arburst(m_axi_mbus_ARBURST),
-          .m_axi_mbus_arcache(m_axi_mbus_ARCACHE),
-          .m_axi_mbus_arid(m_axi_mbus_ARID),
-          .m_axi_mbus_arlen(m_axi_mbus_ARLEN),
-          .m_axi_mbus_arprot(m_axi_mbus_ARPROT),
-          .m_axi_mbus_arready(m_axi_mbus_ARREADY),
-          .m_axi_mbus_arsize(m_axi_mbus_ARSIZE),
-          .m_axi_mbus_arvalid(m_axi_mbus_ARVALID),
-          .m_axi_mbus_awaddr(m_axi_mbus_AWADDR),
-          .m_axi_mbus_awburst(m_axi_mbus_AWBURST),
-          .m_axi_mbus_awcache(m_axi_mbus_AWCACHE),
-          .m_axi_mbus_awid(m_axi_mbus_AWID),
-          .m_axi_mbus_awlen(m_axi_mbus_AWLEN),
-          .m_axi_mbus_awprot(m_axi_mbus_AWPROT),
-          .m_axi_mbus_awready(m_axi_mbus_AWREADY),
-          .m_axi_mbus_awsize(m_axi_mbus_AWSIZE),
-          .m_axi_mbus_awvalid(m_axi_mbus_AWVALID),
-          .m_axi_mbus_bid(m_axi_mbus_BID),
-          .m_axi_mbus_bready(m_axi_mbus_BREADY),
-          .m_axi_mbus_bvalid(m_axi_mbus_BVALID),
-          .m_axi_mbus_rdata(m_axi_mbus_RDATA),
-          .m_axi_mbus_rid(m_axi_mbus_RID),
-          .m_axi_mbus_rlast(m_axi_mbus_RLAST),
-          .m_axi_mbus_rready(m_axi_mbus_RREADY),
-          .m_axi_mbus_rvalid(m_axi_mbus_RVALID),
-          .m_axi_mbus_wdata(m_axi_mbus_WDATA),
-          .m_axi_mbus_wlast(m_axi_mbus_WLAST),
-          .m_axi_mbus_wready(m_axi_mbus_WREADY),
-          .m_axi_mbus_wstrb(m_axi_mbus_WSTRB),
-          .m_axi_mbus_wvalid(m_axi_mbus_WVALID),
-          .m_axi_mbus_arqos(m_axi_mbus_ARQOS),
-          .m_axi_mbus_arlock(m_axi_mbus_ARLOCK),
-          .m_axi_mbus_awqos(m_axi_mbus_AWQOS),
-          .m_axi_mbus_awlock(m_axi_mbus_AWLOCK),
-          .m_axi_mbus_rresp(m_axi_mbus_RRESP),
-          .m_axi_mbus_bresp(m_axi_mbus_BRESP),
-          .s_axi_dma0_araddr(s_axi_dma_araddr),
-          .s_axi_dma0_arcache(s_axi_dma_arcache),
-          .s_axi_dma0_arlen(s_axi_dma_arlen),
-          .s_axi_dma0_arprot(s_axi_dma_arprot),
-          .s_axi_dma0_arready(s_axi_dma_arready),
-          .s_axi_dma0_arsize(s_axi_dma_arsize),
-          .s_axi_dma0_arvalid(s_axi_dma_arvalid),
-          .s_axi_dma0_awaddr(s_axi_dma_awaddr),
-          .s_axi_dma0_awcache(s_axi_dma_awcache),
-          .s_axi_dma0_awlen(s_axi_dma_awlen),
-          .s_axi_dma0_awprot(s_axi_dma_awprot),
-          .s_axi_dma0_awready(s_axi_dma_awready),
-          .s_axi_dma0_awsize(s_axi_dma_awsize),
-          .s_axi_dma0_awvalid(s_axi_dma_awvalid),
-          .s_axi_dma0_bready(s_axi_dma_bready),
-          .s_axi_dma0_bvalid(s_axi_dma_bvalid),
-          .s_axi_dma0_rdata(s_axi_dma_rdata),
-          .s_axi_dma0_rlast(s_axi_dma_rlast),
-          .s_axi_dma0_rready(s_axi_dma_rready),
-          .s_axi_dma0_rvalid(s_axi_dma_rvalid),
-          .s_axi_dma0_wdata(s_axi_dma_wdata),
-          .s_axi_dma0_wlast(s_axi_dma_wlast),
-          .s_axi_dma0_wready(s_axi_dma_wready),
-          .s_axi_dma0_wstrb(s_axi_dma_wstrb),
-          .s_axi_dma0_wvalid(s_axi_dma_wvalid),
-          .s_axi_dma0_bresp(s_axi_dma_bresp),
-          .s_axi_dma0_rresp(s_axi_dma_rresp),
-          .s_axi_dma0_arburst(s_axi_dma_arburst),
-          .s_axi_dma0_awburst(s_axi_dma_awburst),
-          .s_axi_dma1_araddr(s_axi_dma_vga_araddr),
-          .s_axi_dma1_arcache(s_axi_dma_vga_arcache),
-          .s_axi_dma1_arlen(s_axi_dma_vga_arlen),
-          .s_axi_dma1_arprot(s_axi_dma_vga_arprot),
-          .s_axi_dma1_arready(s_axi_dma_vga_arready),
-          .s_axi_dma1_arsize(s_axi_dma_vga_arsize),
-          .s_axi_dma1_arvalid(s_axi_dma_vga_arvalid),
-          .s_axi_dma1_awaddr(s_axi_dma_vga_awaddr),
-          .s_axi_dma1_awcache(s_axi_dma_vga_awcache),
-          .s_axi_dma1_awlen(s_axi_dma_vga_awlen),
-          .s_axi_dma1_awprot(s_axi_dma_vga_awprot),
-          .s_axi_dma1_awready(s_axi_dma_vga_awready),
-          .s_axi_dma1_awsize(s_axi_dma_vga_awsize),
-          .s_axi_dma1_awvalid(s_axi_dma_vga_awvalid),
-          .s_axi_dma1_bready(s_axi_dma_vga_bready),
-          .s_axi_dma1_bvalid(s_axi_dma_vga_bvalid),
-          .s_axi_dma1_rdata(s_axi_dma_vga_rdata),
-          .s_axi_dma1_rlast(s_axi_dma_vga_rlast),
-          .s_axi_dma1_rready(s_axi_dma_vga_rready),
-          .s_axi_dma1_rvalid(s_axi_dma_vga_rvalid),
-          .s_axi_dma1_wdata(s_axi_dma_vga_wdata),
-          .s_axi_dma1_wlast(s_axi_dma_vga_wlast),
-          .s_axi_dma1_wready(s_axi_dma_vga_wready),
-          .s_axi_dma1_wstrb(s_axi_dma_vga_wstrb),
-          .s_axi_dma1_wvalid(s_axi_dma_vga_wvalid),
-          .s_axi_dma1_bresp(s_axi_dma_vga_bresp),
-          .s_axi_dma1_rresp(s_axi_dma_vga_rresp),
-          .s_axi_dma1_arburst(s_axi_dma_vga_arburst),
-          .s_axi_dma1_awburst(s_axi_dma_vga_awburst)
+          .m_axi_perf_araddr(s_axi_perf_ARADDR),
+          .m_axi_perf_arready(s_axi_perf_ARREADY),
+          .m_axi_perf_arvalid(s_axi_perf_ARVALID),
+          .m_axi_perf_arprot(s_axi_perf_ARPROT),
+          .m_axi_perf_awaddr(s_axi_perf_AWADDR),
+          .m_axi_perf_awprot(s_axi_perf_AWPROT),
+          .m_axi_perf_awready(s_axi_perf_AWREADY),
+          .m_axi_perf_awvalid(s_axi_perf_AWVALID),
+          .m_axi_perf_bready(s_axi_perf_BREADY),
+          .m_axi_perf_bresp(s_axi_perf_BRESP),
+          .m_axi_perf_bvalid(s_axi_perf_BVALID),
+          .m_axi_perf_rdata(s_axi_perf_RDATA),
+          .m_axi_perf_rready(s_axi_perf_RREADY),
+          .m_axi_perf_rresp(s_axi_perf_RRESP),
+          .m_axi_perf_rvalid(s_axi_perf_RVALID),
+          .m_axi_perf_wdata(s_axi_perf_WDATA),
+          .m_axi_perf_wready(s_axi_perf_WREADY),
+          .m_axi_perf_wstrb(s_axi_perf_WSTRB),
+          .m_axi_perf_wvalid(s_axi_perf_WVALID),
+          .m_axi_mbus_araddr(s_axi_mbus_ARADDR),
+          .m_axi_mbus_arburst(s_axi_mbus_ARBURST),
+          .m_axi_mbus_arcache(s_axi_mbus_ARCACHE),
+          .m_axi_mbus_arid(s_axi_mbus_ARID),
+          .m_axi_mbus_arlen(s_axi_mbus_ARLEN),
+          .m_axi_mbus_arprot(s_axi_mbus_ARPROT),
+          .m_axi_mbus_arready(s_axi_mbus_ARREADY),
+          .m_axi_mbus_arsize(s_axi_mbus_ARSIZE),
+          .m_axi_mbus_arvalid(s_axi_mbus_ARVALID),
+          .m_axi_mbus_awaddr(s_axi_mbus_AWADDR),
+          .m_axi_mbus_awburst(s_axi_mbus_AWBURST),
+          .m_axi_mbus_awcache(s_axi_mbus_AWCACHE),
+          .m_axi_mbus_awid(s_axi_mbus_AWID),
+          .m_axi_mbus_awlen(s_axi_mbus_AWLEN),
+          .m_axi_mbus_awprot(s_axi_mbus_AWPROT),
+          .m_axi_mbus_awready(s_axi_mbus_AWREADY),
+          .m_axi_mbus_awsize(s_axi_mbus_AWSIZE),
+          .m_axi_mbus_awvalid(s_axi_mbus_AWVALID),
+          .m_axi_mbus_bid(s_axi_mbus_BID),
+          .m_axi_mbus_bready(s_axi_mbus_BREADY),
+          .m_axi_mbus_bvalid(s_axi_mbus_BVALID),
+          .m_axi_mbus_rdata(s_axi_mbus_RDATA),
+          .m_axi_mbus_rid(s_axi_mbus_RID),
+          .m_axi_mbus_rlast(s_axi_mbus_RLAST),
+          .m_axi_mbus_rready(s_axi_mbus_RREADY),
+          .m_axi_mbus_rvalid(s_axi_mbus_RVALID),
+          .m_axi_mbus_wdata(s_axi_mbus_WDATA),
+          .m_axi_mbus_wlast(s_axi_mbus_WLAST),
+          .m_axi_mbus_wready(s_axi_mbus_WREADY),
+          .m_axi_mbus_wstrb(s_axi_mbus_WSTRB),
+          .m_axi_mbus_wvalid(s_axi_mbus_WVALID),
+          .m_axi_mbus_arqos(s_axi_mbus_ARQOS),
+          .m_axi_mbus_arlock(s_axi_mbus_ARLOCK),
+          .m_axi_mbus_awqos(s_axi_mbus_AWQOS),
+          .m_axi_mbus_awlock(s_axi_mbus_AWLOCK),
+          .m_axi_mbus_rresp(s_axi_mbus_RRESP),
+          .m_axi_mbus_bresp(s_axi_mbus_BRESP)
      );
 
      sys_rstgen inst_sys_rstgen

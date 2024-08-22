@@ -54,7 +54,7 @@ create_ip -vlnv xilinx.com:ip:axi_tft:2.0 -module_name axi_tft_vga
 set_property CONFIG.C_EN_I2C_INTF {0} [get_ips axi_tft_vga]
 set_property CONFIG.C_M_AXI_DATA_WIDTH {32} [get_ips axi_tft_vga]
 set_property CONFIG.C_TFT_INTERFACE {0} [get_ips axi_tft_vga]
-set_property CONFIG.C_DEFAULT_TFT_BASE_ADDR {0x0000000020000000} [get_ips axi_tft_vga]
+set_property CONFIG.C_DEFAULT_TFT_BASE_ADDR {0x0000000090000000} [get_ips axi_tft_vga]
 
 set_property generate_synth_checkpoint false [get_files axi_tft_vga.xci]
 

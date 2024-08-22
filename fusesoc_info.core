@@ -10,11 +10,11 @@ filesets:
 
   nexys-a7-100t:
     files:
+      - nexys-a7-100t/system_wrapper.v     : {file_type : verilogSource}
       - nexys-a7-100t/system_constr.xdc    : {file_type : xdc}
       - nexys-a7-100t/system_gen_ps.tcl    : {file_type : tclSource}
       - nexys-a7-100t/system_ps_wrapper.v  : {file_type : verilogSource}
       - nexys-a7-100t/system_gen.tcl       : {file_type : tclSource}
-      - nexys-a7-100t/system_wrapper.v     : {file_type : verilogSource}
     depend:
       - AFRL:utility:digilent_nexys-a7-100t_board_base_constr:1.0.0
       - AFRL:utility:digilent_nexys-a7-100t_board_base_ddr_cfg:1.0.0
@@ -35,6 +35,8 @@ filesets:
       #- spinalhdl:cpu:veronica_axi_jtag_xilinx_bscane:1.0.0
       - spinalhdl:cpu:veronica_axi_jtag_io:1.0.0
       - zipcpu:axi_lite:crossbar:1.0.0
+      - zipcpu:axi:crossbar:1.0.0
+      #- zipcpu:axi:axixclk:1.0.0
 
   #dep_tb:
     #depend:
