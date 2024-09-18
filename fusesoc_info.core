@@ -70,12 +70,12 @@ targets:
   nexys-a7-100t_uc_secure:
     <<: *nexys-a7-100t
     description: Build for nexys-a7-100t digilent development board with PMP enabled Veronica RISCV.
-    filesets_append : [nexys-a7-100t, dep_uc_secure]
+    filesets_append : [dep_uc_secure]
 
   nexys-a7-100t_uc:
     <<: *nexys-a7-100t
     description: Build for nexys-a7-100t digilent development board with standard Veronica RISCV.
-    filesets_append : [nexys-a7-100t, dep_uc]
+    filesets_append : [dep_uc]
 
   #crosslink-nx_eval:
     #<<: *default
