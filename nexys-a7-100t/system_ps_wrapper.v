@@ -993,7 +993,7 @@ module system_ps_wrapper
           .io_debug_rst(debug_rst),
           .io_ddr_clk(axi_ddr_ctrl_ui_clk),
           .io_ddr_rst(ddr_rstgen_peripheral_reset),
-          .io_irq({{128-9{1'b0}}, axi_timer_irq, axi_tft_irq, axi_quad_spi_irq, axi_spi_irq, axi_ethernet_irq, axi_uartlite_irq, IRQ}),
+          .io_irq({{128-10{1'b0}}, axi_timer_irq, axi_tft_irq, axi_quad_spi_irq, axi_spi_irq, axi_ethernet_irq, axi_uartlite_irq, IRQ, 1'b0}),
           //.io_s_axi_dma0_aclk(s_axi_dma_aclk),
           //.io_s_axi_dma0_arst(s_axi_dma_arst),
           //.io_s_axi_dma1_aclk(axi_cpu_clk),
