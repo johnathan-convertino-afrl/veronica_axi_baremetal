@@ -15,6 +15,8 @@ set_property CONFIG.CLKOUT2_REQUESTED_OUT_FREQ {200.000} [get_ips clk_wiz_1]
 set_property CONFIG.CLKOUT3_USED {true} [get_ips clk_wiz_1]
 set_property CONFIG.CLKOUT3_REQUESTED_OUT_FREQ {25.000} [get_ips clk_wiz_1]
 
+set CLK_FREQ_MHZ [get_property CONFIG.CLKOUT1_REQUESTED_OUT_FREQ [get_ips clk_wiz_1]]
+
 set_property generate_synth_checkpoint false [get_files clk_wiz_1.xci]
 
 ip_vlvn_version_check "xilinx.com:ip:proc_sys_reset:5.0"
@@ -63,6 +65,7 @@ ip_vlvn_version_check "xilinx.com:ip:axi_uartlite:2.0"
 
 create_ip -vlnv xilinx.com:ip:axi_uartlite:2.0 -module_name axi_uart
 set_property CONFIG.C_BAUDRATE {115200} [get_ips axi_uart]
+set_property CONFIG.C_S_AXI_ACLK_FREQ_HZ_d $CLK_FREQ_MHZ [get_ips axi_uart]
 
 set_property generate_synth_checkpoint false [get_files axi_uart.xci]
 
