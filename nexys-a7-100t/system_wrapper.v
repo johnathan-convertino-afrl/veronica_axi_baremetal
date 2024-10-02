@@ -8,6 +8,13 @@
 
 module system
   (
+`ifdef _JTAG_IO
+    // jtag
+    input           tck,
+    input           tms,
+    input           tdi,
+    output          tdo,
+`endif
     // clock and reset
     input             clk,
     input             resetn,
@@ -55,12 +62,7 @@ module system
     output            ftdi_cts,
     //qspi
     inout  [3:0]      qspi_dq,
-    output            qspi_csn,
-    // jtag
-    input           tck,
-    input           tms,
-    input           tdi,
-    output          tdo
+    output            qspi_csn
   );
 
   wire          sys_clk;
@@ -118,6 +120,13 @@ module system
   );
 
   system_ps_wrapper inst_system_ps_wrapper (
+`ifdef _JTAG_IO
+      // jtag
+    .tck(tck),
+    .tms(tms),
+    .tdi(tdi),
+    .tdo(tdo),
+`endif
     .DDR_addr(ddr2_addr),
     .DDR_ba(ddr2_ba),
     .DDR_cas_n(ddr2_cas_n),
@@ -224,11 +233,6 @@ module system
     .vga_vsync(vga_vs),
     .vga_r(s_vga_r),
     .vga_g(s_vga_g),
-    .vga_b(s_vga_b),
-    // jtag
-    .tck(tck),
-    .tms(tms),
-    .tdi(tdi),
-    .tdo(tdo)
+    .vga_b(s_vga_b)
   );
 endmodule

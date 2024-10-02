@@ -29,6 +29,12 @@
 
 module system_ps_wrapper
      (
+`ifdef _JTAG_IO
+          input           tck,
+          input           tms,
+          input           tdi,
+          output          tdo,
+`endif
           output    [12:0]    DDR_addr,
           output    [ 2:0]    DDR_ba,
           output              DDR_cas_n,
@@ -135,12 +141,7 @@ module system_ps_wrapper
           output              vga_vsync,
           output    [ 5:0]    vga_r,
           output    [ 5:0]    vga_g,
-          output    [ 5:0]    vga_b,
-          // jtag
-          input           tck,
-          input           tms,
-          input           tdi,
-          output          tdo
+          output    [ 5:0]    vga_b
      );
 
      //ethernet buf signals
@@ -998,10 +999,12 @@ module system_ps_wrapper
           //.io_s_axi_dma0_arst(s_axi_dma_arst),
           //.io_s_axi_dma1_aclk(axi_cpu_clk),
           //.io_s_axi_dma1_arst(sys_rstgen_peripheral_reset),
+`ifdef _JTAG_IO
           .io_jtag_tms(tms),
           .io_jtag_tdi(tdi),
           .io_jtag_tdo(tdo),
           .io_jtag_tck(tck),
+`endif
           .m_axi_acc_araddr(M_AXI_araddr),
           .m_axi_acc_arprot(M_AXI_arprot),
           .m_axi_acc_arready(M_AXI_arready),

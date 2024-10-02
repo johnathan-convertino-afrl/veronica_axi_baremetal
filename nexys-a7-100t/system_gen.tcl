@@ -17,6 +17,8 @@ reorder_files -fileset sources_1 -back [get_files axilxbar.v]
 
 set_property target_constrs_file [get_files system_constr.xdc] [current_fileset -constrset]
 
+set_property verilog_define abc=def [current_fileset]
+
 # set_property strategy Performance_Retiming [get_runs impl_1]
 # set_property strategy Flow_PerfOptimized_high [get_runs synth_1]
 # set_property STEPS.SYNTH_DESIGN.ARGS.FLATTEN_HIERARCHY none [get_runs synth_1]
