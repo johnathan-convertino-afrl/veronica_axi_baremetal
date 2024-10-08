@@ -6,7 +6,7 @@
 
 set_property STEPS.SYNTH_DESIGN.ARGS.FLATTEN_HIERARCHY none [get_runs synth_1]
 
-reorder_files -fileset constrs_1 -front [get_files system_constr.xdc]
+reorder_files -fileset constrs_1 -front [get_files system_constr.tcl]
 
 #fixes for zipcpu axi_crossbar in vivado. default_net will screw up synth. make all files last.
 reorder_files -fileset sources_1 -back [get_files skidbuffer.v]
@@ -17,23 +17,24 @@ reorder_files -fileset sources_1 -back [get_files axilxbar.v]
 reorder_files -fileset sources_1 -back [get_files afifo.v]
 reorder_files -fileset sources_1 -back [get_files sdckgen.v]
 reorder_files -fileset sources_1 -back [get_files sddma_rxgears.v]
-reorder_files -fileset sources_1 -back [get_files sddma.v]
+reorder_files -fileset sources_1 -back [get_files sddma_axi.v]
 reorder_files -fileset sources_1 -back [get_files sdio_axi.v]
-reorder_files -fileset sources_1 -back [get_files sdskid.v]
+reorder_files -fileset sources_1 -back [get_files sdio_top_axi.v]
 reorder_files -fileset sources_1 -back [get_files sdtxframe.v]
 reorder_files -fileset sources_1 -back [get_files sdcmd.v]
-reorder_files -fileset sources_1 -back [get_files sddma_s2mm.v]
+# reorder_files -fileset sources_1 -back [get_files sddma_s2mm.v]
 reorder_files -fileset sources_1 -back [get_files sdfifo.v]
 reorder_files -fileset sources_1 -back [get_files sdio.v]
-reorder_files -fileset sources_1 -back [get_files sdwb.v]
+# reorder_files -fileset sources_1 -back [get_files sdwb.v]
 reorder_files -fileset sources_1 -back [get_files xsdddr.v]
-reorder_files -fileset sources_1 -back [get_files sddma_mm2s.v]
+# reorder_files -fileset sources_1 -back [get_files sddma_mm2s.v]
 reorder_files -fileset sources_1 -back [get_files sddma_txgears.v]
 reorder_files -fileset sources_1 -back [get_files sdfrontend.v]
 reorder_files -fileset sources_1 -back [get_files sdrxframe.v]
 reorder_files -fileset sources_1 -back [get_files xsdserdes8x.v]
-
-set_property target_constrs_file [get_files system_constr.xdc] [current_fileset -constrset]
+reorder_files -fileset sources_1 -back [get_files axixclk.v]
+reorder_files -fileset sources_1 -back [get_files sdaxil.v]
+reorder_files -fileset sources_1 -back [get_files sdskid.v]
 
 set_property verilog_define abc=def [current_fileset]
 

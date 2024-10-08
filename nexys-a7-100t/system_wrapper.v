@@ -62,7 +62,7 @@ module system
     output            ftdi_cts,
     //qspi
     inout  [3:0]      qspi_dq,
-    output            qspi_csn
+    output            qspi_csn,
     //sd card
     output            sd_reset,
     input             sd_cd,
@@ -99,7 +99,7 @@ module system
 
   assign eth_refclk = 1'bz;
 
-  assign sd_reset = s_sd_resetn;
+  assign sd_reset = ~s_sd_resetn;
 
   util_mii_to_rmii #(
     .INTF_CFG(0),
@@ -213,10 +213,10 @@ module system
     .vga_r(s_vga_r),
     .vga_g(s_vga_g),
     .vga_b(s_vga_b),
-    sd_resetn(s_sd_resetn),
-    sd_cd(sd_cd),
-    sd_sck(sd_sck),
-    sd_cmd(sd_cmd),
-    sd_dat(sd_dat)
+    .sd_resetn(s_sd_resetn),
+    .sd_cd(sd_cd),
+    .sd_sck(sd_sck),
+    .sd_cmd(sd_cmd),
+    .sd_dat(sd_dat)
   );
 endmodule

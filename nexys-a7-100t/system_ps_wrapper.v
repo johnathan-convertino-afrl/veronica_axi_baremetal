@@ -527,6 +527,11 @@ module system_ps_wrapper
   wire          s_axi_dma_axixclk_rvalid;
   wire          s_axi_dma_axixclk_rready;
 
+  //fill in vector
+  wire [7*3-1:0]  m_axi_awprot_fill;
+  wire [7*3-1:0]  m_axi_arprot_fill;
+  wire            s_axi_dma_axixclk_aresetn;
+
   //distribute clock for axi and assign to output for m_axi_acc
   assign s_axi_clk = axi_cpu_clk;
 
@@ -1006,7 +1011,7 @@ module system_ps_wrapper
   (
     .aux_reset_in(axi_ddr_ctrl_ui_clk_sync_rst),
     .dcm_locked(axi_ddr_ctrl_mmcm_locked),
-    .ext_reset_in(sys_rstn),
+    .ext_reset_in(sys_rstn & s_axi_dma_axixclk_aresetn),
     .mb_debug_sys_rst(debug_rst),
     .peripheral_reset(ddr_rstgen_peripheral_reset),
     .peripheral_aresetn(ddr_rstgen_peripheral_aresetn),
@@ -1061,7 +1066,7 @@ module system_ps_wrapper
     .S_AXI_RREADY(s_axi_dma_sdio_rready),
     //	Downstream port
     .M_AXI_ACLK(axi_ddr_ctrl_ui_clk),
-    .M_AXI_ARESETN(ddr_rstgen_peripheral_aresetn),
+    .M_AXI_ARESETN(s_axi_dma_axixclk_aresetn),
     .M_AXI_AWID(s_axi_dma_axixclk_awid),
     .M_AXI_AWADDR(s_axi_dma_axixclk_awaddr),
     .M_AXI_AWLEN(s_axi_dma_axixclk_awlen),
@@ -1131,7 +1136,7 @@ module system_ps_wrapper
     .S_AXI_RVALID   (s_axi_perf_RVALID),
     .S_AXI_RREADY   (s_axi_perf_RREADY),
     .M_AXI_AWADDR  ({m_axi_sdio_awaddr,     m_axi_vga_AWADDR,      m_axi_timer_AWADDR,    m_axi_eth_AWADDR,    m_axi_spi_AWADDR,    m_axi_qspi_AWADDR,    m_axi_uart_AWADDR,     m_axi_gpio_AWADDR}),
-    .M_AXI_AWPROT  ({m_axi_sdio_awprot,     !!!FILL IN WITH EMPTY VECTORS!!!),
+    .M_AXI_AWPROT  ({m_axi_sdio_awprot,     m_axi_awprot_fill}),
     .M_AXI_AWVALID ({m_axi_sdio_awvalid,    m_axi_vga_AWVALID,     m_axi_timer_AWVALID,   m_axi_eth_AWVALID,   m_axi_spi_AWVALID,   m_axi_qspi_AWVALID,   m_axi_uart_AWVALID,    m_axi_gpio_AWVALID}),
     .M_AXI_AWREADY ({m_axi_sdio_awready,    m_axi_vga_AWREADY,     m_axi_timer_AWREADY,   m_axi_eth_AWREADY,   m_axi_spi_AWREADY,   m_axi_qspi_AWREADY,   m_axi_uart_AWREADY,    m_axi_gpio_AWREADY}),
     .M_AXI_WDATA   ({m_axi_sdio_wdata,      m_axi_vga_WDATA,       m_axi_timer_WDATA,     m_axi_eth_WDATA,     m_axi_spi_WDATA,     m_axi_qspi_WDATA,     m_axi_uart_WDATA,      m_axi_gpio_WDATA}),
@@ -1142,7 +1147,7 @@ module system_ps_wrapper
     .M_AXI_BVALID  ({m_axi_sdio_bvalid,     m_axi_vga_BVALID,      m_axi_timer_BVALID,    m_axi_eth_BVALID,    m_axi_spi_BVALID,    m_axi_qspi_BVALID,    m_axi_uart_BVALID,     m_axi_gpio_BVALID}),
     .M_AXI_BREADY  ({m_axi_sdio_bready,     m_axi_vga_BREADY,      m_axi_timer_BREADY,    m_axi_eth_BREADY,    m_axi_spi_BREADY,    m_axi_qspi_BREADY,    m_axi_uart_BREADY,     m_axi_gpio_BREADY}),
     .M_AXI_ARADDR  ({m_axi_sdio_araddr,     m_axi_vga_ARADDR,      m_axi_timer_ARADDR,    m_axi_eth_ARADDR,    m_axi_spi_ARADDR,    m_axi_qspi_ARADDR,    m_axi_uart_ARADDR,     m_axi_gpio_ARADDR}),
-    .M_AXI_ARPROT  ({m_axi_sdio_arprot,     !!!FILL IN WITH EMPTY VECTORS!!!),
+    .M_AXI_ARPROT  ({m_axi_sdio_arprot,     m_axi_arprot_fill}),
     .M_AXI_ARVALID ({m_axi_sdio_arvalid,    m_axi_vga_ARVALID,     m_axi_timer_ARVALID,   m_axi_eth_ARVALID,   m_axi_spi_ARVALID,   m_axi_qspi_ARVALID,   m_axi_uart_ARVALID,    m_axi_gpio_ARVALID}),
     .M_AXI_ARREADY ({m_axi_sdio_arready,    m_axi_vga_ARREADY,     m_axi_timer_ARREADY,   m_axi_eth_ARREADY,   m_axi_spi_ARREADY,   m_axi_qspi_ARREADY,   m_axi_uart_ARREADY,    m_axi_gpio_ARREADY}),
     .M_AXI_RDATA   ({m_axi_sdio_rdata,      m_axi_vga_RDATA,       m_axi_timer_RDATA,     m_axi_eth_RDATA,     m_axi_spi_RDATA,     m_axi_qspi_RDATA,     m_axi_uart_RDATA,      m_axi_gpio_RDATA}),
