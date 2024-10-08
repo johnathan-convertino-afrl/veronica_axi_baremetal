@@ -34,6 +34,8 @@ filesets:
       - AFRL:utility:tcl_helper_check:1.0.0
       - zipcpu:axi_lite:crossbar:1.0.0
       - zipcpu:axi:crossbar:1.0.0
+      - zipcpu:axi:sdio:1.0.0
+      - zipcpu:axi:axixclk:1.0.0
 
   dep_uc_jtag_io:
     files:

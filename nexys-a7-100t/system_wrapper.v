@@ -63,6 +63,12 @@ module system
     //qspi
     inout  [3:0]      qspi_dq,
     output            qspi_csn
+    //sd card
+    output            sd_reset,
+    input             sd_cd,
+    output            sd_sck,
+    inout             sd_cmd,
+    inout  [ 3:0]     sd_dat
   );
 
   wire          sys_clk;
@@ -83,6 +89,8 @@ module system
   wire  [5:0]   s_vga_g;
   wire  [5:0]   s_vga_b;
 
+  wire          s_sd_resetn;
+
   assign vga_r = (s_vga_r > 15 ? 4'b1111 : s_vga_r[3:0]);
   assign vga_g = (s_vga_g > 15 ? 4'b1111 : s_vga_g[3:0]);
   assign vga_b = (s_vga_b > 15 ? 4'b1111 : s_vga_b[3:0]);
@@ -90,6 +98,8 @@ module system
   assign ftdi_cts = ftdi_rts;
 
   assign eth_refclk = 1'bz;
+
+  assign sd_reset = s_sd_resetn;
 
   util_mii_to_rmii #(
     .INTF_CFG(0),
@@ -178,37 +188,6 @@ module system
     .QSPI_0_io2_io(qspi_dq[2]),
     .QSPI_0_io3_io(qspi_dq[3]),
     .QSPI_0_ss_io(qspi_csn),
-    //.s_axi_dma_arst(1'b0),
-    //.s_axi_dma_aclk(1'b0),
-    //.s_axi_dma_araddr(32'h00000000),
-    //.s_axi_dma_arburst(2'b00),
-    //.s_axi_dma_arcache(4'b0000),
-    //.s_axi_dma_arlen(8'b00000000),
-    //.s_axi_dma_arprot(3'b000),
-    //.s_axi_dma_arready(),
-    //.s_axi_dma_arsize(3'b000),
-    //.s_axi_dma_arvalid(1'b0),
-    //.s_axi_dma_awaddr(32'h00000000),
-    //.s_axi_dma_awburst(2'b00),
-    //.s_axi_dma_awcache(4'b0000),
-    //.s_axi_dma_awlen(8'b00000000),
-    //.s_axi_dma_awprot(3'b000),
-    //.s_axi_dma_awready(),
-    //.s_axi_dma_awsize(3'b000),
-    //.s_axi_dma_awvalid(1'b0),
-    //.s_axi_dma_bready(1'b1),
-    //.s_axi_dma_bresp(),
-    //.s_axi_dma_bvalid(),
-    //.s_axi_dma_rdata(),
-    //.s_axi_dma_rlast(),
-    //.s_axi_dma_rready(1'b1),
-    //.s_axi_dma_rresp(),
-    //.s_axi_dma_rvalid(),
-    //.s_axi_dma_wdata(32'h00000000),
-    //.s_axi_dma_wlast(1'b0),
-    //.s_axi_dma_wready(),
-    //.s_axi_dma_wstrb(4'b0000),
-    //.s_axi_dma_wvalid(1'b0),
     .UART_rxd(ftdi_tx),
     .UART_txd(ftdi_rx),
     .gpio_io_i(slide_switches),
@@ -233,6 +212,11 @@ module system
     .vga_vsync(vga_vs),
     .vga_r(s_vga_r),
     .vga_g(s_vga_g),
-    .vga_b(s_vga_b)
+    .vga_b(s_vga_b),
+    sd_resetn(s_sd_resetn),
+    sd_cd(sd_cd),
+    sd_sck(sd_sck),
+    sd_cmd(sd_cmd),
+    sd_dat(sd_dat)
   );
 endmodule
