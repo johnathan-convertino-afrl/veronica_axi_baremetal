@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("SystemVerilogModule:QSPI_0_ss_iobuf_0","QSPI_0_ss_iobuf_0");NDSummary.OnSummaryLoaded("SystemVerilogModule:QSPI_0_ss_iobuf_0",[["SystemVerilog","SystemVerilog"]],[["Modules","Module"]],[[37,0,0,"QSPI_0_ss_iobuf_0"]]);

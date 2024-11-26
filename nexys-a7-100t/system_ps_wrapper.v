@@ -1,32 +1,130 @@
 //******************************************************************************
-/// @FILE    system_ps_wrapper.v
-/// @AUTHOR  JAY CONVERTINO
-/// @DATE    2024.07.30
-/// @BRIEF   System wrapper for ps.
-///
-/// @LICENSE MIT
-///  Copyright 2024 Jay Convertino
-///
-///  Permission is hereby granted, free of charge, to any person obtaining a copy
-///  of this software and associated documentation files (the "Software"), to
-///  deal in the Software without restriction, including without limitation the
-///  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
-///  sell copies of the Software, and to permit persons to whom the Software is
-///  furnished to do so, subject to the following conditions:
-///
-///  The above copyright notice and this permission notice shall be included in
-///  all copies or substantial portions of the Software.
-///
-///  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-///  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-///  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-///  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-///  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-///  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-///  IN THE SOFTWARE.
+//  file:     system_ps_wrapper.v
+//
+//  author:   JAY CONVERTINO
+//
+//  date:     2024/11/25
+//
+//  about:    Brief
+//  System wrapper for ps.
+//
+//  license: License MIT
+//  Copyright 2024 Jay Convertino
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to
+//  deal in the Software without restriction, including without limitation the
+//  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+//  sell copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+//  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+//  IN THE SOFTWARE.
 //******************************************************************************
+
 `timescale 1ns/100ps
 
+/*
+ * Module: system_ps_wrapper
+ *
+ * System wrapper for ps.
+ *
+ * Ports:
+ *
+ * tck            - JTAG
+ * tms            - JTAG
+ * tdi            - JTAG
+ * tdo            - JTAG
+ * DDR_addr       - DDR interface
+ * DDR_ba         - DDR interface
+ * DDR_cas_n      - DDR interface
+ * DDR_ck_n       - DDR interface
+ * DDR_ck_p       - DDR interface
+ * DDR_cke        - DDR interface
+ * DDR_cs_n       - DDR interface
+ * DDR_dm         - DDR interface
+ * DDR_dq         - DDR interface
+ * DDR_dqs_n      - DDR interface
+ * DDR_dqs_p      - DDR interface
+ * DDR_odt        - DDR interface
+ * DDR_ras_n      - DDR interface
+ * DDR_we_n       - DDR interface
+ * IRQ            - External Interrupts
+ * MDIO_mdc       - Ethernet Interface MII
+ * MDIO_mdio_io   - Ethernet Interface MII
+ * MII_col        - Ethernet Interface MII
+ * MII_crs        - Ethernet Interface MII
+ * MII_rst_n      - Ethernet Interface MII
+ * MII_rx_clk     - Ethernet Interface MII
+ * MII_rx_dv      - Ethernet Interface MII
+ * MII_rx_er      - Ethernet Interface MII
+ * MII_rxd        - Ethernet Interface MII
+ * MII_tx_clk     - Ethernet Interface MII
+ * MII_tx_en      - Ethernet Interface MII
+ * MII_txd        - Ethernet Interface MII
+ * M_AXI_araddr   - External AXI Lite Master Interface
+ * M_AXI_arprot   - External AXI Lite Master Interface
+ * M_AXI_arready  - External AXI Lite Master Interface
+ * M_AXI_arvalid  - External AXI Lite Master Interface
+ * M_AXI_awaddr   - External AXI Lite Master Interface
+ * M_AXI_awprot   - External AXI Lite Master Interface
+ * M_AXI_awready  - External AXI Lite Master Interface
+ * M_AXI_awvalid  - External AXI Lite Master Interface
+ * M_AXI_bready   - External AXI Lite Master Interface
+ * M_AXI_bresp    - External AXI Lite Master Interface
+ * M_AXI_bvalid   - External AXI Lite Master Interface
+ * M_AXI_rdata    - External AXI Lite Master Interface
+ * M_AXI_rready   - External AXI Lite Master Interface
+ * M_AXI_rresp    - External AXI Lite Master Interface
+ * M_AXI_rvalid   - External AXI Lite Master Interface
+ * M_AXI_wdata    - External AXI Lite Master Interface
+ * M_AXI_wready   - External AXI Lite Master Interface
+ * M_AXI_wstrb    - External AXI Lite Master Interface
+ * M_AXI_wvalid   - External AXI Lite Master Interface
+ * QSPI_0_io0_io  - Quad SPI
+ * QSPI_0_io1_io  - Quad SPI
+ * QSPI_0_io2_io  - Quad SPI
+ * QSPI_0_io3_io  - Quad SPI
+ * QSPI_0_ss_io   - Quad SPI
+ * UART_rxd       - UART RX
+ * UART_txd       - UART TX
+ * gpio_io_i      - GPIO input
+ * gpio_io_o      - GPIO output
+ * gpio_io_t      - GPIO tristate select
+ * s_axi_clk      - AXI Clock
+ * spi_io0_i      - SPI IO
+ * spi_io0_o      - SPI IO
+ * spi_io0_t      - SPI IO
+ * spi_io1_i      - SPI IO
+ * spi_io1_o      - SPI IO
+ * spi_io1_t      - SPI IO
+ * spi_sck_i      - SPI IO
+ * spi_sck_o      - SPI IO
+ * spi_sck_t      - SPI IO
+ * spi_ss_i       - SPI IO
+ * spi_ss_o       - SPI IO
+ * spi_ss_t       - SPI IO
+ * sys_clk        - SYSTEM clock for pll
+ * sys_rstn       - SYSTEM reset
+ * vga_hsync      - VGA
+ * vga_vsync      - VGA
+ * vga_r          - VGA
+ * vga_g          - VGA
+ * vga_b          - VGA
+ * sd_resetn      - sd card
+ * sd_cd          - sd card
+ * sd_sck         - sd card
+ * sd_cmd         - sd card
+ * sd_dat         - sd card
+ */
 module system_ps_wrapper
   (
 `ifdef _JTAG_IO
@@ -535,7 +633,11 @@ module system_ps_wrapper
   //distribute clock for axi and assign to output for m_axi_acc
   assign s_axi_clk = axi_cpu_clk;
 
-  //MDIO ETH BUF
+  // Group: Instantianted Modules
+
+  // Module: MDIO_mdio_iobuf
+  //
+  // TRISTATE IO
   IOBUF MDIO_mdio_iobuf
   (
     .I(MDIO_mdio_o),
@@ -544,7 +646,9 @@ module system_ps_wrapper
     .T(MDIO_mdio_t)
   );
 
-  //QUAD SPI BUFS
+  // Module: QSPI_0_io0_iobuf
+  //
+  // TRISTATE IO
   IOBUF QSPI_0_io0_iobuf
   (
     .I(QSPI_0_io0_o),
@@ -553,6 +657,9 @@ module system_ps_wrapper
     .T(QSPI_0_io0_t)
   );
 
+  // Module: QSPI_0_io1_iobuf
+  //
+  // TRISTATE IO
   IOBUF QSPI_0_io1_iobuf
   (
     .I(QSPI_0_io1_o),
@@ -561,6 +668,9 @@ module system_ps_wrapper
     .T(QSPI_0_io1_t)
   );
 
+  // Module: QSPI_0_io2_iobuf
+  //
+  // TRISTATE IO
   IOBUF QSPI_0_io2_iobuf
   (
     .I(QSPI_0_io2_o),
@@ -569,6 +679,9 @@ module system_ps_wrapper
     .T(QSPI_0_io2_t)
   );
 
+  // Module: QSPI_0_io3_iobuf
+  //
+  // TRISTATE IO
   IOBUF QSPI_0_io3_iobuf
   (
     .I(QSPI_0_io3_o),
@@ -577,6 +690,9 @@ module system_ps_wrapper
     .T(QSPI_0_io3_t)
   );
 
+  // Module: QSPI_0_ss_iobuf_0
+  //
+  // TRISTATE IO
   IOBUF QSPI_0_ss_iobuf_0
   (
     .I(QSPI_0_ss_o_0),
@@ -585,6 +701,9 @@ module system_ps_wrapper
     .T(QSPI_0_ss_t)
   );
 
+  // Module: inst_axi_ddr_ctrl
+  //
+  // AXI DDR Controller
   axi_ddr_ctrl inst_axi_ddr_ctrl
   (
     .aresetn(ddr_rstgen_peripheral_aresetn),
@@ -646,6 +765,9 @@ module system_ps_wrapper
     .ui_clk_sync_rst(axi_ddr_ctrl_ui_clk_sync_rst)
   );
 
+  // Module: inst_axi_ethernet
+  //
+  // AXI Ethernet MAC
   axi_ethernet inst_axi_ethernet
   (
     .ip2intc_irpt(axi_ethernet_irq),
@@ -684,6 +806,9 @@ module system_ps_wrapper
     .s_axi_wvalid(m_axi_eth_WVALID)
   );
 
+  // Module: inst_axi_gpio32
+  //
+  // AXI GPIO
   axi_gpio32 inst_axi_gpio32
   (
     .gpio_io_i(gpio_io_i),
@@ -710,6 +835,9 @@ module system_ps_wrapper
     .s_axi_wvalid(m_axi_gpio_WVALID)
   );
 
+  // Module: inst_axi_spix4
+  //
+  // AXI Quad SPI
   axi_spix4 inst_axi_spix4
   (
     .ext_spi_clk(axi_cpu_clk),
@@ -750,6 +878,9 @@ module system_ps_wrapper
     .ss_t(QSPI_0_ss_t_0)
   );
 
+  // Module: inst_axi_spix1
+  //
+  // AXI Standard SPI
   axi_spix1 inst_axi_spix1
   (
     .ext_spi_clk(axi_cpu_clk),
@@ -787,6 +918,9 @@ module system_ps_wrapper
     .ss_t(spi_ss_t)
   );
 
+  // Module: inst_axi_uart
+  //
+  // AXI UART LITE
   axi_uart inst_axi_uart
   (
     .interrupt(axi_uartlite_irq),
@@ -813,15 +947,18 @@ module system_ps_wrapper
     .tx(UART_txd)
   );
 
+  // Module: inst_axi_double_timer
+  //
+  // AXI Double Timer
   axi_double_timer inst_axi_double_timer
   (
-    .capturetrig0(1'b0),    // input wire capturetrig0
-    .capturetrig1(1'b0),    // input wire capturetrig1
-    .generateout0(),    // output wire generateout0
-    .generateout1(),    // output wire generateout1
-    .pwm0(pwm0),                    // output wire pwm0
-    .interrupt(axi_timer_irq),          // output wire interrupt
-    .freeze(1'b0),                // input wire freeze
+    .capturetrig0(1'b0),
+    .capturetrig1(1'b0),
+    .generateout0(),
+    .generateout1(),
+    .pwm0(pwm0),
+    .interrupt(axi_timer_irq),
+    .freeze(1'b0),
     .s_axi_aclk(axi_cpu_clk),
     .s_axi_araddr(m_axi_timer_ARADDR[4:0]),
     .s_axi_aresetn(sys_rstgen_peripheral_aresetn),
@@ -843,6 +980,9 @@ module system_ps_wrapper
     .s_axi_wvalid(m_axi_timer_WVALID)
   );
 
+  // Module: inst_axi_tft_vga
+  //
+  // AXI TFT VGA 640x480
   axi_tft_vga inst_axi_tft_vga
   (
     .s_axi_aclk(axi_cpu_clk),
@@ -851,35 +991,35 @@ module system_ps_wrapper
     .m_axi_aresetn(ddr_rstgen_peripheral_aresetn),
     .md_error(),
     .ip2intc_irpt(axi_tft_irq),
-    .m_axi_arready(s_axi_dma_vga_arready),  // input wire m_axi_arready
-    .m_axi_arvalid(s_axi_dma_vga_arvalid),  // output wire m_axi_arvalid
-    .m_axi_araddr(s_axi_dma_vga_araddr),    // output wire [31 : 0] m_axi_araddr
-    .m_axi_arlen(s_axi_dma_vga_arlen),      // output wire [7 : 0] m_axi_arlen
-    .m_axi_arsize(s_axi_dma_vga_arsize),    // output wire [2 : 0] m_axi_arsize
-    .m_axi_arburst(s_axi_dma_vga_arburst),  // output wire [1 : 0] m_axi_arburst
-    .m_axi_arprot(s_axi_dma_vga_arprot),    // output wire [2 : 0] m_axi_arprot
-    .m_axi_arcache(s_axi_dma_vga_arcache),  // output wire [3 : 0] m_axi_arcache
-    .m_axi_rready(s_axi_dma_vga_rready),    // output wire m_axi_rready
-    .m_axi_rvalid(s_axi_dma_vga_rvalid),    // input wire m_axi_rvalid
-    .m_axi_rdata(s_axi_dma_vga_rdata),      // input wire [31 : 0] m_axi_rdata
-    .m_axi_rresp(s_axi_dma_vga_rresp),      // input wire [1 : 0] m_axi_rresp
-    .m_axi_rlast(s_axi_dma_vga_rlast),      // input wire m_axi_rlast
-    .m_axi_awready(s_axi_dma_vga_awready),  // input wire m_axi_awready
-    .m_axi_awvalid(s_axi_dma_vga_awvalid),  // output wire m_axi_awvalid
-    .m_axi_awaddr(s_axi_dma_vga_awaddr),    // output wire [31 : 0] m_axi_awaddr
-    .m_axi_awlen(s_axi_dma_vga_awlen),      // output wire [7 : 0] m_axi_awlen
-    .m_axi_awsize(s_axi_dma_vga_awsize),    // output wire [2 : 0] m_axi_awsize
-    .m_axi_awburst(s_axi_dma_vga_awburst),  // output wire [1 : 0] m_axi_awburst
-    .m_axi_awprot(s_axi_dma_vga_awprot),    // output wire [2 : 0] m_axi_awprot
-    .m_axi_awcache(s_axi_dma_vga_awcache),  // output wire [3 : 0] m_axi_awcache
-    .m_axi_wready(s_axi_dma_vga_wready),    // input wire m_axi_wready
-    .m_axi_wvalid(s_axi_dma_vga_wvalid),    // output wire m_axi_wvalid
-    .m_axi_wdata(s_axi_dma_vga_wdata),      // output wire [31 : 0] m_axi_wdata
-    .m_axi_wstrb(s_axi_dma_vga_wstrb),      // output wire [3 : 0] m_axi_wstrb
-    .m_axi_wlast(s_axi_dma_vga_wlast),      // output wire m_axi_wlast
-    .m_axi_bready(s_axi_dma_vga_bready),    // output wire m_axi_bready
-    .m_axi_bvalid(s_axi_dma_vga_bvalid),    // input wire m_axi_bvalid
-    .m_axi_bresp(s_axi_dma_vga_bresp),      // input wire [1 : 0] m_axi_bresp
+    .m_axi_arready(s_axi_dma_vga_arready),
+    .m_axi_arvalid(s_axi_dma_vga_arvalid),
+    .m_axi_araddr(s_axi_dma_vga_araddr),
+    .m_axi_arlen(s_axi_dma_vga_arlen),
+    .m_axi_arsize(s_axi_dma_vga_arsize),
+    .m_axi_arburst(s_axi_dma_vga_arburst),
+    .m_axi_arprot(s_axi_dma_vga_arprot),
+    .m_axi_arcache(s_axi_dma_vga_arcache),
+    .m_axi_rready(s_axi_dma_vga_rready),
+    .m_axi_rvalid(s_axi_dma_vga_rvalid),
+    .m_axi_rdata(s_axi_dma_vga_rdata),
+    .m_axi_rresp(s_axi_dma_vga_rresp),
+    .m_axi_rlast(s_axi_dma_vga_rlast),
+    .m_axi_awready(s_axi_dma_vga_awready),
+    .m_axi_awvalid(s_axi_dma_vga_awvalid),
+    .m_axi_awaddr(s_axi_dma_vga_awaddr),
+    .m_axi_awlen(s_axi_dma_vga_awlen),
+    .m_axi_awsize(s_axi_dma_vga_awsize),
+    .m_axi_awburst(s_axi_dma_vga_awburst),
+    .m_axi_awprot(s_axi_dma_vga_awprot),
+    .m_axi_awcache(s_axi_dma_vga_awcache),
+    .m_axi_wready(s_axi_dma_vga_wready),
+    .m_axi_wvalid(s_axi_dma_vga_wvalid),
+    .m_axi_wdata(s_axi_dma_vga_wdata),
+    .m_axi_wstrb(s_axi_dma_vga_wstrb),
+    .m_axi_wlast(s_axi_dma_vga_wlast),
+    .m_axi_bready(s_axi_dma_vga_bready),
+    .m_axi_bvalid(s_axi_dma_vga_bvalid),
+    .m_axi_bresp(s_axi_dma_vga_bresp),
     .s_axi_awaddr(m_axi_vga_AWADDR),
     .s_axi_awvalid(m_axi_vga_AWVALID),
     .s_axi_awready(m_axi_vga_AWREADY),
@@ -908,20 +1048,17 @@ module system_ps_wrapper
     .tft_vga_b(vga_b)
   );
 
+  // Module: inst_sdio_top
+  //
+  // AXI SD CARD Module (CRAP TO BE REMOVED AND CHANGED)
   sdio_top #(
-    // ADDRESS_WIDTH: Number of bits to the DMA's address lines,
-    // as required to access octets of memory.  This is not the word
-    // address width, but the octet/byte address width.
     .ADDRESS_WIDTH(32),
-    // OPT_DMA: Set to 1 to include the DMA in the design
     .OPT_DMA(1),
-    // AXI_IW: ID width of the AXI interface
     .AXI_IW(4)
   ) inst_sdio_top (
     .i_clk(axi_cpu_clk),
     .i_reset(sys_rstgen_peripheral_reset),
     .i_hsclk(1'b0),
-    // Control interface
     .S_AXIL_AWVALID(m_axi_sdio_awvalid),
     .S_AXIL_AWREADY(m_axi_sdio_awready),
     .S_AXIL_AWADDR(m_axi_sdio_awaddr),
@@ -941,7 +1078,6 @@ module system_ps_wrapper
     .S_AXIL_RREADY(m_axi_sdio_rready),
     .S_AXIL_RDATA(m_axi_sdio_rdata),
     .S_AXIL_RRESP(m_axi_sdio_rresp),
-    // DMA interface
     .M_AXI_AWVALID(s_axi_dma_sdio_awvalid),
     .M_AXI_AWREADY(s_axi_dma_sdio_awready),
     .M_AXI_AWID(s_axi_dma_sdio_awid),
@@ -979,7 +1115,6 @@ module system_ps_wrapper
     .M_AXI_RDATA(s_axi_dma_sdio_rdata),
     .M_AXI_RLAST(s_axi_dma_sdio_rlast),
     .M_AXI_RRESP(s_axi_dma_sdio_rresp),
-    // External DMA streaming interface
     .s_valid(1'b0),
     .s_ready(),
     .s_data(0),
@@ -987,7 +1122,6 @@ module system_ps_wrapper
     .m_ready(1'b0),
     .m_data(),
     .m_last(),
-    // IO interface
     .o_ck(sd_sck),
     .i_ds(1'b0),
     .io_cmd(sd_cmd),
@@ -999,6 +1133,9 @@ module system_ps_wrapper
     .o_debug()
   );
 
+  // Module: inst_clk_wiz_1
+  //
+  // Generate system clocks
   clk_wiz_1 inst_clk_wiz_1
   (
     .clk_in1(sys_clk),
@@ -1007,6 +1144,9 @@ module system_ps_wrapper
     .clk_out3(tft_clk)
   );
 
+  // Module: inst_ddr_rstgen
+  //
+  // Generate DDR Reset
   ddr_rstgen inst_ddr_rstgen
   (
     .aux_reset_in(axi_ddr_ctrl_ui_clk_sync_rst),
@@ -1018,6 +1158,9 @@ module system_ps_wrapper
     .slowest_sync_clk(axi_ddr_ctrl_ui_clk)
   );
 
+  // Module: inst_axixclk
+  //
+  // AXI Cross clock for DMA to DDR Memory
   axixclk #(
     .C_S_AXI_ID_WIDTH(4),
     .C_S_AXI_DATA_WIDTH(32),
@@ -1064,7 +1207,6 @@ module system_ps_wrapper
     .S_AXI_RLAST(s_axi_dma_sdio_rlast),
     .S_AXI_RVALID(s_axi_dma_sdio_rvalid),
     .S_AXI_RREADY(s_axi_dma_sdio_rready),
-    //	Downstream port
     .M_AXI_ACLK(axi_ddr_ctrl_ui_clk),
     .M_AXI_ARESETN(s_axi_dma_axixclk_aresetn),
     .M_AXI_AWID(s_axi_dma_axixclk_awid),
@@ -1106,11 +1248,14 @@ module system_ps_wrapper
     .M_AXI_RREADY(s_axi_dma_axixclk_rready)
   );
 
+  // Module: inst_axilite_perf_xbar
+  //
+  // AXI Lite Crossbar for slow speed devices .. sdio, tft vga, double timer, ethernet, spi, qspi, uart, gpio
   axilxbar #(
     .C_AXI_DATA_WIDTH(32),
     .C_AXI_ADDR_WIDTH(32),
     .NM(1),
-    .NS(7),      //sdio, tft vga, double timer, ethernet, spi, qspi, uart, gpio
+    .NS(7),
     .SLAVE_ADDR({{32'h44A70000},{32'h44A60000},{32'h44A50000},{32'h44A40000},{32'h44A30000},{32'h44A20000},{32'h44A10000},{32'h44A00000}}),
     .SLAVE_MASK({{32'hFFFF0000},{32'hFFFF0000},{32'hFFFF0000},{32'hFFFF0000},{32'hFFFF0000},{32'hFFFF0000},{32'hFFFF0000},{32'hFFFF0000}})
   ) inst_axilite_perf_xbar (
@@ -1156,16 +1301,18 @@ module system_ps_wrapper
     .M_AXI_RREADY  ({m_axi_sdio_rready,     m_axi_vga_RREADY,      m_axi_timer_RREADY,    m_axi_eth_RREADY,    m_axi_spi_RREADY,    m_axi_qspi_RREADY,    m_axi_uart_RREADY,     m_axi_gpio_RREADY})
   );
 
+  // Module: inst_axi_mem_xbar
+  //
+  // AXI Crossbar .. IBUS/DBUS @ 0x90000000 plus 2 dma cores. single Large RAM slave, 0xC0000000 is 1 GB mask (0x40000000 twos compliment).
   axixbar #(
     .C_AXI_DATA_WIDTH(32),
     .C_AXI_ADDR_WIDTH(32),
     .C_AXI_ID_WIDTH(4),
-    .NM(3),   //IBUS/DBUS @ 0x90000000 plus 2 dma cores
-    .NS(1),   //single Large RAM slave, 0xC0000000 is 1 GB mask (0x40000000 twos compliment).
+    .NM(3),
+    .NS(1),
     .SLAVE_ADDR({{32'h90000000}}),
     .SLAVE_MASK({{32'hC0000000}})
   ) inst_axi_mem_xbar (
-    //slave interface input (from masters, number masters)\
     .S_AXI_ACLK(axi_ddr_ctrl_ui_clk),
     .S_AXI_ARESETN(ddr_rstgen_peripheral_aresetn),
     .S_AXI_AWID    ({s_axi_dma_axixclk_awid,     4'h0,                  s_axi_mbus_AWID}),
@@ -1205,7 +1352,6 @@ module system_ps_wrapper
     .S_AXI_RLAST   ({s_axi_dma_axixclk_rlast,    s_axi_dma_vga_rlast,   s_axi_mbus_RLAST}),
     .S_AXI_RVALID  ({s_axi_dma_axixclk_rvalid,   s_axi_dma_vga_rvalid,  s_axi_mbus_RVALID}),
     .S_AXI_RREADY  ({s_axi_dma_axixclk_rready,   s_axi_dma_vga_rready,  s_axi_mbus_RREADY}),
-    //master output (to slaves, number slaves)
     .M_AXI_AWID(m_axi_ddr_AWID),
     .M_AXI_AWADDR(m_axi_ddr_AWADDR),
     .M_AXI_AWLEN(m_axi_ddr_AWLEN),
@@ -1245,6 +1391,9 @@ module system_ps_wrapper
     .M_AXI_RREADY(m_axi_ddr_RREADY)
   );
 
+  // Module: inst_veronica
+  //
+  // Veronica AXI Vexriscv CPU
   Veronica inst_veronica
   (
     .io_aclk(axi_cpu_clk),
@@ -1253,10 +1402,6 @@ module system_ps_wrapper
     .io_ddr_clk(axi_ddr_ctrl_ui_clk),
     .io_ddr_rst(ddr_rstgen_peripheral_reset),
     .io_irq({{128-9{1'b0}}, spio_irq, axi_timer_irq, axi_tft_irq, axi_quad_spi_irq, axi_spi_irq, axi_ethernet_irq, axi_uartlite_irq, IRQ, 1'b0}),
-    //.io_s_axi_dma0_aclk(s_axi_dma_aclk),
-    //.io_s_axi_dma0_arst(s_axi_dma_arst),
-    //.io_s_axi_dma1_aclk(axi_cpu_clk),
-    //.io_s_axi_dma1_arst(sys_rstgen_peripheral_reset),
   `ifdef _JTAG_IO
     .io_jtag_tms(tms),
     .io_jtag_tdi(tdi),
@@ -1340,6 +1485,9 @@ module system_ps_wrapper
     .m_axi_mbus_bresp(s_axi_mbus_BRESP)
   );
 
+  // Module: inst_sys_rstgen
+  //
+  // Generate general system resets
   sys_rstgen inst_sys_rstgen
   (
     .aux_reset_in(axi_ddr_ctrl_ui_clk_sync_rst),
@@ -1351,4 +1499,5 @@ module system_ps_wrapper
     .peripheral_aresetn(sys_rstgen_peripheral_aresetn),
     .slowest_sync_clk(axi_cpu_clk)
   );
+
 endmodule

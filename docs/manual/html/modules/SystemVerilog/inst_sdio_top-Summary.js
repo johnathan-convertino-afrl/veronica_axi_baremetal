@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("SystemVerilogModule:inst_sdio_top","inst_sdio_top");NDSummary.OnSummaryLoaded("SystemVerilogModule:inst_sdio_top",[["SystemVerilog","SystemVerilog"]],[["Modules","Module"]],[[46,0,0,"inst_sdio_top"]]);

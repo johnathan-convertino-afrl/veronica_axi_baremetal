@@ -1,0 +1,23 @@
+\documentclass[usletter]{article}
+\usepackage{DejaVuSans}
+\renewcommand*\familydefault{\sfdefault}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{listings}
+\lstset{
+  breaklines=true,
+  postbreak=\mbox{\textcolor{red}{$\hookrightarrow$}\space},
+}
+\usepackage{pdfpages}
+\usepackage[hidelinks]{hyperref}
+\begin{document}
+
+  \include{src/common.tex}
+
+  %module documentation section
+
+  \includepdf[pages=-, addtotoc={1,subsection,1,nexys a7 100t ps wrapper,p1}, pagecommand={}]{files_system_ps_wrapper-v.pdf}
+  \includepdf[pages=-, addtotoc={1,subsection,1,nexys a7 100t system wrapper,p1}, pagecommand={}]{files_system_wrapper-v.pdf}
+  \includepdf[pages=-, addtotoc={1,subsection,1,crosslink nx eval place holder,p1}, pagecommand={}]{files2_system_wrapper-v.pdf}
+
+\end{document}

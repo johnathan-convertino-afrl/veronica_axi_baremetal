@@ -1,24 +1,104 @@
-// ***************************************************************************
-// ***************************************************************************
+//******************************************************************************
+//  file:     system_wrapper.v
 //
-// ***************************************************************************
-// ***************************************************************************
+//  author:   JAY CONVERTINO
+//
+//  date:     2024/11/25
+//
+//  about:    Brief
+//  System wrapper for ps.
+//
+//  license: License MIT
+//  Copyright 2024 Jay Convertino
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to
+//  deal in the Software without restriction, including without limitation the
+//  rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+//  sell copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+//  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+//  IN THE SOFTWARE.
+//******************************************************************************
 
 `timescale 1ns/100ps
 
-module system
+/*
+ * Module: system_wrapper
+ *
+ * System wrapper for Vexriscv Veronica RISCV ps.
+ *
+ * Ports:
+ *
+ * tck                    - JTAG
+ * tms                    - JTAG
+ * tdi                    - JTAG
+ * tdo                    - JTAG
+ * clk                    - Master Input Clock
+ * resetn                 - Master Reset Input
+ * ddr2_addr              - DDR interface
+ * ddr2_ba                - DDR interface
+ * ddr2_cas_n             - DDR interface
+ * ddr2_ck_n              - DDR interface
+ * ddr2_ck_p              - DDR interface
+ * ddr2_cke               - DDR interface
+ * ddr2_cs_n              - DDR interface
+ * ddr2_dm                - DDR interface
+ * ddr2_dq                - DDR interface
+ * ddr2_dqs_n             - DDR interface
+ * ddr2_dqs_p             - DDR interface
+ * ddr2_odt               - DDR interface
+ * ddr2_ras_n             - DDR interface
+ * ddr2_reset_n           - DDR interface
+ * ddr2_we_n              - DDR interface
+ * eth_mdc                - ethernet interface
+ * eth_mdio               - ethernet interface
+ * eth_rstn               - ethernet interface
+ * eth_crsdv              - ethernet interface
+ * eth_rxerr              - ethernet interface
+ * eth_rxd                - ethernet interface
+ * eth_txen               - ethernet interface
+ * eth_txd                - ethernet interface
+ * eth_refclk             - ethernet interface
+ * eth_50mclk             - ethernet interface
+ * vga_r                  - vga interface
+ * vga_g                  - vga interface
+ * vga_b                  - vga interface
+ * vga_hs                 - vga interface
+ * vga_vs                 - vga interface
+ * leds                   - board leds
+ * slide_switches         - board slide switches
+ * ftdi_tx                - FTDI UART TX
+ * ftdi_rx                - FTDI UART RX
+ * ftdi_rts               - FTDI UART RTS
+ * ftdi_cts               - FTDI UART CTS
+ * qspi_dq                - QUAD SPI
+ * qspi_csn               - QUAD SPI
+ * sd_reset               - SD CARD Reset
+ * sd_cd                  - SD CARD CD
+ * sd_sck                 - SD CARD sck
+ * sd_cmd                 - SD CARD cmd
+ * sd_dat                 - SD CARD dat
+ */
+module system_wrapper
   (
 `ifdef _JTAG_IO
-    // jtag
     input           tck,
     input           tms,
     input           tdi,
     output          tdo,
 `endif
-    // clock and reset
     input             clk,
     input             resetn,
-    //ddr2
     inout   [12:0]    ddr2_addr,
     inout   [ 2:0]    ddr2_ba,
     inout             ddr2_cas_n,
@@ -34,7 +114,6 @@ module system
     inout             ddr2_ras_n,
     inout             ddr2_reset_n,
     inout             ddr2_we_n,
-    //ethernet
     output            eth_mdc,
     inout             eth_mdio,
     input             eth_rstn,
@@ -45,25 +124,19 @@ module system
     output  [1:0]     eth_txd,
     output            eth_refclk,
     input             eth_50mclk,
-    //vga
     output  [ 3:0]    vga_r,
     output  [ 3:0]    vga_g,
     output  [ 3:0]    vga_b,
     output            vga_hs,
     output            vga_vs,
-    // leds
     output  [15:0]    leds,
-    // slide switches
     input   [15:0]    slide_switches,
-    // uart
     input             ftdi_tx,
     output            ftdi_rx,
     input             ftdi_rts,
     output            ftdi_cts,
-    //qspi
     inout  [3:0]      qspi_dq,
     output            qspi_csn,
-    //sd card
     output            sd_reset,
     input             sd_cd,
     output            sd_sck,
@@ -101,15 +174,18 @@ module system
 
   assign sd_reset = ~s_sd_resetn;
 
+  // Group: Instantianted Modules
+
+  // Module: inst_util_mii_to_rmii
+  //
+  // convert from mii to rmii (UNTESTED)
   util_mii_to_rmii #(
     .INTF_CFG(0),
     .RATE_10_100(0)
   ) inst_util_mii_to_rmii (
-    // MAC to MII(PHY)
     .mac_tx_en(MII_tx_en),
     .mac_txd(MII_txd),
     .mac_tx_er(1'b0),
-    //MII to MAC
     .mii_tx_clk(MII_tx_clk),
     .mii_rx_clk(MII_rx_clk),
     .mii_col(MII_col),
@@ -117,21 +193,20 @@ module system
     .mii_rx_dv(MII_rx_dv),
     .mii_rx_er(MII_rx_er),
     .mii_rxd(MII_rxd),
-    // RMII to PHY
     .rmii_txd(eth_txd),
     .rmii_tx_en(eth_txen),
-    // PHY to RMII
     .phy_rxd(eth_rxd),
     .phy_crs_dv(eth_crsdv),
     .phy_rx_er(eth_rxerr),
-    // External
     .ref_clk(eth_50mclk),
     .reset_n(eth_rstn)
   );
 
+  // Module: inst_system_ps_wrapper
+  //
+  // Wraps all of the RISCV CPU core and its devices.
   system_ps_wrapper inst_system_ps_wrapper (
 `ifdef _JTAG_IO
-      // jtag
     .tck(tck),
     .tms(tms),
     .tdi(tdi),
@@ -219,4 +294,5 @@ module system
     .sd_cmd(sd_cmd),
     .sd_dat(sd_dat)
   );
+
 endmodule

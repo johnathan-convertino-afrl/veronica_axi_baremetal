@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("SystemVerilogModule:inst_ddr_rstgen","inst_ddr_rstgen");NDSummary.OnSummaryLoaded("SystemVerilogModule:inst_ddr_rstgen",[["SystemVerilog","SystemVerilog"]],[["Modules","Module"]],[[48,0,0,"inst_ddr_rstgen"]]);

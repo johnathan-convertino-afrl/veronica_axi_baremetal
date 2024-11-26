@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("SystemVerilogModule:inst_axi_spix1","inst_axi_spix1");NDSummary.OnSummaryLoaded("SystemVerilogModule:inst_axi_spix1",[["SystemVerilog","SystemVerilog"]],[["Modules","Module"]],[[42,0,0,"inst_axi_spix1"]]);

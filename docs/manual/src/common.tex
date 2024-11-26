@@ -1,0 +1,113 @@
+\begin{titlepage}
+  \begin{center}
+
+  {\Huge VERONICA\_AXI\_BAREMETAL}
+
+  \vspace{25mm}
+
+  \includegraphics[width=0.90\textwidth,height=\textheight,keepaspectratio]{img/AFRL.png}
+
+  \vspace{25mm}
+
+  \today
+
+  \vspace{15mm}
+
+  {\Large Jay Convertino}
+
+  \end{center}
+\end{titlepage}
+
+\tableofcontents
+
+\newpage
+
+\section{Usage}
+
+\subsection{Introduction}
+
+\par
+The Veronica AXI Baremetal is a base Vexriscv system. This version of the Vexriscv core emulates the E31 core in its mapping of features.
+Difference is that this core can generate a MMU and non-PMP enabled versions. The JTAG configuration can also be changed between the Xilinx BSCANE, or
+JTAG IO for external devices, or none. Each target tries to use all of the resources of the board using free IP's from the vendor, or open source
+IP cores intergrated into fusesoc.
+
+\subsection{Dependencies}
+
+\par
+The following are the dependencies of the cores.
+
+\begin{itemize}
+  \item fusesoc 2.X
+  \item iverilog (simulation)
+  \item cocotb (simulation)
+\end{itemize}
+
+\input{src/fusesoc/depend_fusesoc_info.tex}
+
+\section{Architecture}
+\par
+The project contains four wrappers
+
+\begin{itemize}
+  \item \textbf{system\_wrapper} Contains the top level project module and contains system\_ps\_wrapper.
+  \item \textbf{system\_ps\_wrapper} Contains the processor system IP wrappers.
+\end{itemize}
+
+\par
+
+Please see \ref{Module Documentation} for more information per target.
+
+\section{Building}
+
+\par
+The all Veronica AXI Baremetal project source files are written in Verilog 2001. They should synthesize in any modern FPGA software. The core comes as a fusesoc packaged core and can be
+included in any other core. Be sure to make sure you have meet the dependencies listed in the previous section.
+
+\subsection{fusesoc}
+\par
+Fusesoc is a system for building FPGA software without relying on the internal project management of the tool. Avoiding vendor lock in to Vivado or Quartus.
+These cores, when included in a project, can be easily integrated and targets created based upon the end developer needs. The core by itself is not a part of
+a system and should be integrated into a fusesoc based system. Simulations are setup to use fusesoc and are a part of its targets.
+
+\subsection{Source Files}
+
+\input{src/fusesoc/files_fusesoc_info.tex}
+
+\subsection{Targets} \label{targets}
+
+\input{src/fusesoc/targets_fusesoc_info.tex}
+
+\subsection{Directory Guide}
+
+\par
+Below highlights important folders from the root of the directory.
+
+\begin{enumerate}
+  \item \textbf{docs} Contains all documentation related to this project.
+    \begin{itemize}
+      \item \textbf{manual} Contains user manual and github page that are generated from the latex sources.
+    \end{itemize}
+  \item \textbf{nexys-a7-100t} Contains source files for nexys-a7-100t
+  \item \textbf{crosslink-nx\_eval} Contains source file for crosslink-nx\_eval, a future target.
+\end{enumerate}
+
+\newpage
+
+\section{Simulation}
+\par
+There is no simulation at the moment. Maybe a future addition?
+
+\newpage
+
+\section{Module Documentation} \label{Module Documentation}
+
+\par
+There project has multiple modules. The targets are the top system wrappers.
+
+\begin{itemize}
+\item \textbf{nexys-a7-100t}
+\item \textbf{crosslink-nx\_eval}
+\end{itemize}
+The next sections document the module in great detail.
+

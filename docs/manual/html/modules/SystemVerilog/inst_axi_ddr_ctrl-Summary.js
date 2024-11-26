@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("SystemVerilogModule:inst_axi_ddr_ctrl","inst_axi_ddr_ctrl");NDSummary.OnSummaryLoaded("SystemVerilogModule:inst_axi_ddr_ctrl",[["SystemVerilog","SystemVerilog"]],[["Modules","Module"]],[[38,0,0,"inst_axi_ddr_ctrl"]]);

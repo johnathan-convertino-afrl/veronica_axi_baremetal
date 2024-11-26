@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("SystemVerilogModule:inst_axixclk","inst_axixclk");NDSummary.OnSummaryLoaded("SystemVerilogModule:inst_axixclk",[["SystemVerilog","SystemVerilog"]],[["Modules","Module"]],[[49,0,0,"inst_axixclk"]]);

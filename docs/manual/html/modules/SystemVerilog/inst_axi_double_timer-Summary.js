@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("SystemVerilogModule:inst_axi_double_timer","inst_axi_double_timer");NDSummary.OnSummaryLoaded("SystemVerilogModule:inst_axi_double_timer",[["SystemVerilog","SystemVerilog"]],[["Modules","Module"]],[[44,0,0,"inst_axi_double_timer"]]);

@@ -1,0 +1,1 @@
+﻿NDFramePage.OnPageTitleLoaded("SystemVerilogModule:inst_veronica","inst_veronica");NDSummary.OnSummaryLoaded("SystemVerilogModule:inst_veronica",[["SystemVerilog","SystemVerilog"]],[["Modules","Module"]],[[52,0,0,"inst_veronica"]]);

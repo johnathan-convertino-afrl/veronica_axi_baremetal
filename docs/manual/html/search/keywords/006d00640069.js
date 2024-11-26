@@ -1,0 +1,1 @@
+﻿NDSearch.OnPrefixDataLoaded("mdi",["Module"],[["MDIO_mdio_iobuf",,[[,,,,0,"File:system_ps_wrapper.v:MDIO_mdio_iobuf","SystemVerilogModule:MDIO_mdio_iobuf"]]]]);
