@@ -35,6 +35,8 @@ reorder_files -fileset sources_1 -back [get_files xsdserdes8x.v]
 reorder_files -fileset sources_1 -back [get_files axixclk.v]
 reorder_files -fileset sources_1 -back [get_files sdaxil.v]
 reorder_files -fileset sources_1 -back [get_files sdskid.v]
+reorder_files -fileset sources_1 -back [get_files sdax_mm2s.v]
+reorder_files -fileset sources_1 -back [get_files sdax_s2mm.v]
 
 # set_property strategy Performance_Retiming [get_runs impl_1]
 # set_property strategy Flow_PerfOptimized_high [get_runs synth_1]
